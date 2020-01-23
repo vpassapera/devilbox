@@ -1,0 +1,6 @@
+[PHP]
+xdebug.mode                = debug
+xdebug.start_with_request  = yes
+xdebug.client_host         = docker.for.lin.localhost
+xdebug.client_port         = 9003
+xdebug.remote_log          = /var/log/php/xdebug.log
