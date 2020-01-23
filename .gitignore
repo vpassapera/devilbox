@@ -14,11 +14,15 @@
 ######################################
 
 # Ignore variable data
-/.env
 /backups/*
 
 # Ignore Data dirs
 /data/www/*
+
+# Ignore Other Data Dirs
+/data/mongo/*
+/data/mysql/*
+/data/pgsql/*
 
 # Ignore Certificate Authority
 /ca/*
