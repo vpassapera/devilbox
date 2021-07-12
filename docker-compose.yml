@@ -555,67 +555,14 @@ volumes:
   # ------------------------------------------------------------
   # MySQL
   # ------------------------------------------------------------
-  devilbox-mysql-5.5:
-  devilbox-mysql-5.6:
-  devilbox-mysql-5.7:
-  devilbox-mysql-8.0:
-  devilbox-mariadb-5.5:
-  devilbox-mariadb-10.0:
-  devilbox-mariadb-10.1:
-  devilbox-mariadb-10.2:
-  devilbox-mariadb-10.3:
-  devilbox-mariadb-10.4:
-  devilbox-mariadb-10.5:
-  devilbox-mariadb-10.6:
-  devilbox-mariadb-10.7:
-  devilbox-mariadb-10.8:
-  devilbox-mariadb-10.9:
   devilbox-mariadb-10.10:
-  devilbox-percona-5.5:
-  devilbox-percona-5.6:
-  devilbox-percona-5.7:
-  devilbox-percona-8.0:
 
   # ------------------------------------------------------------
   # Postgres
   # ------------------------------------------------------------
-  devilbox-pgsql-9.0:
-  devilbox-pgsql-9.1:
-  devilbox-pgsql-9.2:
-  devilbox-pgsql-9.2-alpine:
-  devilbox-pgsql-9.3:
-  devilbox-pgsql-9.3-alpine:
-  devilbox-pgsql-9.4:
-  devilbox-pgsql-9.4-alpine:
-  devilbox-pgsql-9.5:
-  devilbox-pgsql-9.5-alpine:
-  devilbox-pgsql-9.6:
-  devilbox-pgsql-9.6-alpine:
-  devilbox-pgsql-10:
-  devilbox-pgsql-10-alpine:
-  devilbox-pgsql-11:
-  devilbox-pgsql-11-alpine:
-  devilbox-pgsql-12:
-  devilbox-pgsql-12-alpine:
-  devilbox-pgsql-13:
-  devilbox-pgsql-13-alpine:
-  devilbox-pgsql-14:
-  devilbox-pgsql-14-alpine:
-  devilbox-pgsql-15:
-  devilbox-pgsql-15-alpine:
   devilbox-pgsql-latest:
-  devilbox-pgsql-alpine:
 
   # ------------------------------------------------------------
   # MongoDB
   # ------------------------------------------------------------
-  devilbox-mongo-2.8:
-  devilbox-mongo-3.0:
-  devilbox-mongo-3.2:
-  devilbox-mongo-3.4:
-  devilbox-mongo-3.6:
-  devilbox-mongo-4.0:
-  devilbox-mongo-4.2:
-  devilbox-mongo-4.4:
-  devilbox-mongo-5.0:
   devilbox-mongo-latest:
