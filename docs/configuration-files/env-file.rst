@@ -591,6 +591,7 @@ All values are already available in the ``.env`` file and just need to be commen
    #PHP_SERVER=php-fpm-8.0
    PHP_SERVER=php-fpm-8.1
    #PHP_SERVER=php-fpm-8.2
+   #PHP_SERVER=php-fpm-8.3
 
 
 .. _env_httpd_server:
