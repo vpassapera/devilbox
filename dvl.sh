@@ -124,11 +124,6 @@ readonly VERSION="1.0.0"
 function main {
   if [[ $# -eq 0 ]] ; then
       Usage --ansi
-      echo $WEBAPP_DIR
-      echo $HTTPD_SERVER
-      echo $HTTPD_TEMPLATE_DIR
-      echo $HTTPD_DOCROOT_DIR
-      echo $TLD_SUFFIX
   else
     case "$1" in
       up|start)
