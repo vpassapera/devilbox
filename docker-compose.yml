@@ -22,7 +22,11 @@
 ##   $ cp env-example .env
 ##
 
-version: '2.3'
+###
+# Uncommenting the following line if context is lower version of Docker
+#
+# version: '2.3'
+################################################################
 
 
 ################################################################################

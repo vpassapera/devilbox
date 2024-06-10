@@ -314,9 +314,9 @@ HTTPD_SERVER=nginx-stable
 #MYSQL_SERVER=mariadb-10.1
 #MYSQL_SERVER=mariadb-10.2
 #MYSQL_SERVER=mariadb-10.3
-#MYSQL_SERVER=mariadb-10.4
+MYSQL_SERVER=mariadb-10.4
 #MYSQL_SERVER=mariadb-10.5
-MYSQL_SERVER=mariadb-10.6
+#MYSQL_SERVER=mariadb-10.6
 #MYSQL_SERVER=mariadb-10.7
 #MYSQL_SERVER=mariadb-10.8
 #MYSQL_SERVER=mariadb-10.9
@@ -439,6 +439,46 @@ MEMCD_SERVER=1.6-alpine
 #MONGO_SERVER=4.4
 MONGO_SERVER=5.0
 #MONGO_SERVER=latest
+
+
+###
+### 1.8 Choose Varnish Server Image
+###
+### https://varnish-cache.org/releases/index.html
+###
+#VARNISH_SERVER=4
+#VARNISH_SERVER=5
+VARNISH_SERVER=6
+#VARNISH_SERVER=7
+
+
+###
+### 1.9 Choose RabbitMQ Server Image
+###
+### IMPORTANT: Alpine based images might cause issues on Docker Toolbox or OSX
+###            https://github.com/docker/toolbox/issues/510
+###
+#RABBIT_SERVER=3.6
+#RABBIT_SERVER=3.6-management
+#RABBIT_SERVER=3.7
+#RABBIT_SERVER=3.7-management
+#RABBIT_SERVER=latest
+#RABBIT_SERVER=management
+RABBIT_SERVER=3.8
+
+
+
+###
+### 1.10 Choose ELK Server Image
+###
+### See here for all versions: https://www.docker.elastic.co/
+###
+### IMPORTANT: Alpine based images might cause issues on Docker Toolbox or OSX
+###            https://github.com/docker/toolbox/issues/510
+###
+ELK_SERVER=7.9.3
+#ELK_SERVER=7.17.9
+#ELK_SERVER=8.6.2
 
 
 
@@ -605,7 +645,7 @@ HTTPD_VHOST_SSL_TYPE=both
 ###
 ### When changing this value, restart the devilbox.
 ###
-HTTPD_DOCROOT_DIR=htdocs
+HTTPD_DOCROOT_DIR=src
 
 
 ###
@@ -821,7 +861,82 @@ BIND_LOG_DNS_QUERIES=0
 
 ################################################################################
 ###
-### 11. Custom variables
+### 11. ELK Docker Settings
+###
+################################################################################
+
+###
+### Expose ElasticSearch Port to Host
+###
+HOST_PORT_ELK_ELASTIC=9200
+
+
+###
+### Expose Logstash Port to Host
+###
+HOST_PORT_ELK_LOGSTASH=9600
+
+
+###
+### Expose Kibana Port to Host
+###
+HOST_PORT_ELK_KIBANA=5601
+
+
+
+################################################################################
+###
+### 12. Varnish Docker Settings
+###
+################################################################################
+
+###
+### Generic Varnish Settings
+###
+VARNISH_CONFIG=/etc/varnish/default.vcl
+VARNICS_CACHE_SIZE=128m
+VARNISH_PARAMS=-p default_ttl=3600 -p default_grace=3600
+
+
+###
+### Expose Varnish Port to Host
+###
+HOST_PORT_VARNISH=6081
+
+
+###
+### Expose HAProxy Port to Host
+###
+HOST_PORT_HAPROXY=8080
+HOST_PORT_HAPROXY_SSL=8443
+
+
+
+################################################################################
+###
+### 13. RabbitMQ Docker Settings
+###
+################################################################################
+
+###
+### Expose RabbitMQ Port to Host
+###
+HOST_PORT_RABBIT=5672
+HOST_PORT_RABBIT_MGMT=15672
+
+
+###
+### Generic RabbitMQ Settings
+###
+RABBIT_DEFAULT_VHOST=my_vhost
+RABBIT_DEFAULT_USER=guest
+RABBIT_DEFAULT_PASS=guest
+
+
+
+################################################################################
+###
+### 14. Custom variables
 ###
 ################################################################################
 
