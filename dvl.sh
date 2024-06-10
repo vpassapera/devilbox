@@ -37,6 +37,10 @@ function main {
     reset)
       ResetServices "$@"
     ;;
+    exec)
+      shift;
+      ExecShell "$@"
+    ;;
     shell)
       OpenShell "$@"
     ;;
@@ -47,6 +51,14 @@ function main {
       Usage --ansi
     ;;
   esac
+}
+
+function __get_default_containers() {
+  if [[ ! -z "$DEVILBOX_CONTAINERS" ]]; then
+    printf %s "${DEVILBOX_CONTAINERS}"
+  else
+    printf %s "bind httpd php php74 php81 php82 mysql redis elastic"
+  fi
 }
 
 function BaseCommand {
@@ -62,7 +74,7 @@ function BaseComposeCommand {
 }
 
 function StartServices {
-  BaseComposeCommand up bind httpd php php74 mysql redis elastic -d
+  BaseComposeCommand up $(__get_default_containers) -d
 }
 
 function StopServices {
@@ -83,6 +95,10 @@ function OpenShell {
   else
     BaseComposeCommand exec --user devilbox "$2" bash -l
   fi
+}
+
+function ExecShell() {
+  BaseComposeCommand exec --user devilbox php bash -c "$@"
 }
 
 function Usage {
