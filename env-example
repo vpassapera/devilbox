@@ -103,7 +103,9 @@ LOCAL_LISTEN_ADDR=
 ###   TLD_SUFFIX=local
 ### Makes your project available under <project>.local
 ###
-TLD_SUFFIX=lynxic.com
+### Other domains which share same resolution to 127.0.0.1: ddev.site, dvl.to, 127-0-0-1.nip.io, lynxic.com..
+###
+TLD_SUFFIX=lvh.me
 
 
 ###
