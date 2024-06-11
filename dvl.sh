@@ -76,7 +76,7 @@ safe_cd() {
 }
 
 function get_workspace_path() {
-  if [[ -n "$DEVILBOX_PATH" ]]; then
+  if [[ ! -z "$DEVILBOX_PATH" ]]; then
     printf %s "${DEVILBOX_PATH}"
   else
     printf %s "$HOME/.devilbox"
@@ -162,7 +162,7 @@ function main {
 }
 
 function __get_default_containers() {
-  if [[ -n "$DEVILBOX_CONTAINERS" ]]; then
+  if [[ ! -z "$DEVILBOX_CONTAINERS" ]]; then
     printf %s "${DEVILBOX_CONTAINERS}"
   else
     printf %s "bind httpd php php74 php81 php82 mysql redis elastic"
@@ -170,19 +170,19 @@ function __get_default_containers() {
 }
 
 function BaseCommand {
-  (cd "$DEVILBOX_PATH" || exit; docker "$@")
+  docker "$@"
 }
 
 function BaseComposeCommand {
   if hash docker-compose 2>/dev/null; then
-    (cd "$DEVILBOX_PATH" || exit; docker-compose "$@")
+    docker-compose "$@"
   else
-    (cd "$DEVILBOX_PATH" || exit; docker compose "$@")
+    docker compose "$@"
   fi
 }
 
 function StartServices {
-  BaseComposeCommand up "$(__get_default_containers)" -d
+  BaseComposeCommand up $(__get_default_containers) -d
 }
 
 function StopServices {
