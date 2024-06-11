@@ -10,6 +10,10 @@ if [ -t 1 ] && [ -n "$ncolors" ] && [ "$ncolors" -ge 8 ]; then
   GREEN="$(tput setaf 2)"
   YELLOW="$(tput setaf 3)"
   BLUE="$(tput setaf 4)"
+  PURPLE=$(tput setaf 5)
+  CYAN=$(tput setaf 6)
+  LIGHT_GRAY=$(tput setaf 7)
+  DARK_GRAY=$(tput setaf 0)
   BOLD="$(tput bold)"
   NORMAL="$(tput sgr0)"
 else
@@ -17,6 +21,10 @@ else
   GREEN=""
   YELLOW=""
   BLUE=""
+  PURPLE=""
+  CYAN=""
+  LIGHT_GRAY=""
+  DARK_GRAY=""
   BOLD=""
   NORMAL=""
 fi
@@ -63,7 +71,7 @@ info() {
 
 question() {
   local message=$1
-  printf "%s %s\n" "${BLUE}[?]" "${NORMAL}$message"
+  printf "%s %s\n" "${CYAN}[?]" "${NORMAL}$message"
 }
 
 safe_cd() {
@@ -107,6 +115,7 @@ HTTPD_DOCROOT_DIR="$( "${SCRIPT_PATH}/env-getvar.sh" "HTTPD_DOCROOT_DIR" )"
 TLD_SUFFIX="$( "${SCRIPT_PATH}/env-getvar.sh" "TLD_SUFFIX" )"
 WEBAPP_STACK=""
 MAGE_MODE=""
+MAGE_INFRA=""
 WEB_MULTI="N"
 APPNAME="$$$"
 PARENT_APPNAME="$$$"
@@ -142,6 +151,7 @@ function main {
         ResetServices "$@"
       ;;
       init)
+        shift;
         InitializeProject "$@"
       ;;
       exec)
@@ -217,7 +227,7 @@ function InitializeProject() {
   # Define the app name
   while [[ $APPNAME =~ [^-a-z0-9] ]] || [[ $APPNAME == '' ]]
   do
-    read -r -p "${BLUE}Please enter your webapp name (lowercase, alphanumeric):${NORMAL} " APPNAME
+    read -r -p "${CYAN}Please enter your webapp name (lowercase, alphanumeric):${NORMAL} " APPNAME
   done
   APPDOMAINS="https://$APPNAME.$TLD_SUFFIX"
   echo -ne "${YELLOW}Your webapp name set to: $APPNAME"
@@ -229,7 +239,7 @@ function InitializeProject() {
   echo ""
 
   # Choose a web application stack
-  read -r -p "${BLUE}Please choose web application stack (magento, nodejs, laravel, shopify, bigcommerce, phpweb)? [magento]${NORMAL} " response
+  read -r -p "${CYAN}Please choose web application stack (magento, nodejs, laravel, shopify, bigcommerce, phpweb)? [magento]${NORMAL} " response
   case "$response" in
     nodejs)
       WEBAPP_STACK="nodejs"
@@ -270,7 +280,7 @@ function InitializeProject() {
   esac
 
   # Setup subdomain configuration
-  read -r -p "${BLUE}Is this webapp a sub-domain of another web application? [Y/N]${NORMAL} " response
+  read -r -p "${CYAN}Is this webapp a sub-domain of another web application (Y/N)? [N]${NORMAL} " response
   case "$response" in
     [yY][eE][sS]|[yY])
       WEB_MULTI="Y"
@@ -288,7 +298,7 @@ function InitializeProject() {
   if [[ "$WEB_MULTI" == "Y" ]]; then
     while [[ $PARENT_APPNAME =~ [^-a-z0-9] ]] || [[ $PARENT_APPNAME == '' ]]
     do
-      read -r -p "${BLUE}What is the main-entry Magento webapp name?${NORMAL} " PARENT_APPNAME
+      read -r -p "${CYAN}What is the main-entry webapp name?${NORMAL} " PARENT_APPNAME
     done
     echo -ne "${YELLOW}Your parent webapp name set to: $PARENT_APPNAME"
     echo -ne "...${NORMAL} ${GREEN}DONE${NORMAL}"
@@ -297,7 +307,7 @@ function InitializeProject() {
 
   if [[ "$WEBAPP_STACK" == "magento" ]]; then
     # Set Magento Mode
-    read -r -p "${BLUE}Which deploy mode you would like to setup (developer, production)? [production]${NORMAL} " response
+    read -r -p "${CYAN}Which deploy mode you would like to setup (developer, production)? [production]${NORMAL} " response
     case "$response" in
       developer|dev)
         MAGE_MODE="developer"
@@ -312,19 +322,38 @@ function InitializeProject() {
         echo ""
         ;;
     esac
+
+    # Set Infra Mode
+    read -r -p "${CYAN}What is the infrastructure of your Magento project (aws, cloud)? [cloud]${NORMAL} " response
+    case "$response" in
+      aws)
+        MAGE_INFRA="aws"
+        echo -ne "${YELLOW}Your Magento application mode has been set to ${MAGE_MODE}"
+        echo -ne "...${NORMAL} ${GREEN}DONE${NORMAL}"
+        echo ""
+        ;;
+      cloud|*)
+        MAGE_INFRA="cloud"
+        echo -ne "${YELLOW}Your Magento application mode has been set to ${MAGE_MODE}"
+        echo -ne "...${NORMAL} ${GREEN}DONE${NORMAL}"
+        echo ""
+        ;;
+    esac
   fi
 
-  # Define the app repository
-  while [[ $APPREPOSITORY == '' ]]
-  do
-    read -r -p "${BLUE}Please enter your webapp repository (git@github.com:org/repo.git):${NORMAL} " APPREPOSITORY
-  done
-  echo -ne "${YELLOW}Your webapp repository set to: $APPREPOSITORY"
-  echo -ne "...${NORMAL} ${GREEN}DONE${NORMAL}"
-  echo ""
+  if [[ "$WEB_MULTI" == "N" ]]; then
+    # Define the app repository
+    while [[ $APPREPOSITORY == '' ]]
+    do
+      read -r -p "${CYAN}Please enter your webapp repository (git@github.com:org/repo.git):${NORMAL} " APPREPOSITORY
+    done
+    echo -ne "${YELLOW}Your webapp repository set to: $APPREPOSITORY"
+    echo -ne "...${NORMAL} ${GREEN}DONE${NORMAL}"
+    echo ""
+  fi
 
   # Choose PHP version
-  read -r -p "${BLUE}Please choose PHP version of your webapp? [7.4]${NORMAL} " response
+  read -r -p "${CYAN}Please choose PHP version of your webapp? [7.4]${NORMAL} " response
   case "$response" in
     5.2|52|5.3|53|5.4|54|5.5|55|5.6|56)
       PHP_VERSION=$(awk '{gsub(/[.]/,"");print $NF}' <<< "php$response")
@@ -364,6 +393,10 @@ function BootstrapWebApplication {
     exit 1;
   fi
 
+  if [[ "$WEB_MULTI" == "N" ]] && [[ "$MAGE_INFRA" == "aws" ]]; then
+    git clone --quiet "$APPREPOSITORY" "$WEBAPP_DIR/$APPNAME" > /dev/null
+  fi
+
   mkdir -p "$WEBAPP_DIR/$APPNAME"
   mkdir -p "$devilboxConfDir"
 
@@ -373,8 +406,10 @@ function BootstrapWebApplication {
   fi
 
   if [[ "$WEB_MULTI" == "N" ]]; then
-    git clone --quiet "$APPREPOSITORY" "$WEBAPP_DIR/$APPNAME/$HTTPD_DOCROOT_DIR" > /dev/null
-  else
+    if [[ "$MAGE_INFRA" == "cloud" ]]; then
+      git clone --quiet "$APPREPOSITORY" "$WEBAPP_DIR/$APPNAME/$HTTPD_DOCROOT_DIR" > /dev/null
+    fi
+  elif [[ "$WEB_MULTI" == "Y" ]]; then
     (cd "$WEBAPP_DIR" || exit; ln -snf "../$PARENT_APPNAME/$HTTPD_DOCROOT_DIR" "$WEBAPP_DIR/$APPNAME/$HTTPD_DOCROOT_DIR" > /dev/null)
   fi
 
