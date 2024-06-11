@@ -41,7 +41,7 @@ services:
   # ------------------------------------------------------------
   php71:
     <<: *default-php
-    image: devilbox/php-fpm:7.1-prod-0.150
+    image: devilbox/php-fpm:7.1-prod-0.151
     hostname: php71
     networks:
       app_net:
@@ -59,7 +59,7 @@ services:
 
   php72:
     <<: *default-php
-    image: devilbox/php-fpm:7.2-prod-0.150
+    image: devilbox/php-fpm:7.2-prod-0.151
     hostname: php72
     networks:
       app_net:
@@ -77,7 +77,7 @@ services:
 
   php73:
     <<: *default-php
-    image: devilbox/php-fpm:7.3-prod-0.150
+    image: devilbox/php-fpm:7.3-prod-0.151
     hostname: php73
     networks:
       app_net:
@@ -95,7 +95,7 @@ services:
 
   php74:
     <<: *default-php
-    image: devilbox/php-fpm:7.4-prod-0.150
+    image: devilbox/php-fpm:7.4-prod-0.151
     hostname: php74
     networks:
       app_net:
@@ -113,7 +113,7 @@ services:
 
   php80:
     <<: *default-php
-    image: devilbox/php-fpm:8.0-prod-0.150
+    image: devilbox/php-fpm:8.0-prod-0.151
     hostname: php80
     networks:
       app_net:
@@ -131,7 +131,7 @@ services:
 
   php81:
     <<: *default-php
-    image: devilbox/php-fpm:8.1-prod-0.150
+    image: devilbox/php-fpm:8.1-prod-0.151
     hostname: php81
     networks:
       app_net:
@@ -149,7 +149,7 @@ services:
 
   php82:
     <<: *default-php
-    image: devilbox/php-fpm:8.2-prod-0.150
+    image: devilbox/php-fpm:8.2-prod-0.151
     hostname: php82
     networks:
       app_net:
@@ -188,7 +188,7 @@ services:
   # MailHog
   # -----------------------------------------------------------------------------------------------
   mailhog:
-    image: mailhog/mailhog:${MAILHOG_SERVER:-latest}
+    image: ${MAILHOG_IMAGE:-mailhog/mailhog}:${MAILHOG_SERVER:-latest}
     hostname: mailhog
     ports:
       - "${LOCAL_LISTEN_ADDR}${HOST_PORT_MAILHOG:-8025}:8025"

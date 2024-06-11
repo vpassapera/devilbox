@@ -353,19 +353,19 @@ function InitializeProject() {
   fi
 
   # Choose PHP version
-  read -r -p "${CYAN}Please choose PHP version of your webapp? [7.4]${NORMAL} " response
+  read -r -p "${CYAN}Please choose PHP version of your webapp? [8.1]${NORMAL} " response
   case "$response" in
     5.2|52|5.3|53|5.4|54|5.5|55|5.6|56)
       PHP_VERSION=$(awk '{gsub(/[.]/,"");print $NF}' <<< "php$response")
       ;;
-    7.0|70|7.1|71|7.2|72|7.3|73)
+    7.0|70|7.1|71|7.2|72|7.3|73|7.4|74)
       PHP_VERSION=$(awk '{gsub(/[.]/,"");print $NF}' <<< "php$response")
       ;;
-    8.0|80|8.1|81|8.2|82|8.3|83)
+    8.0|80|8.2|82|8.3|83)
       PHP_VERSION=$(awk '{gsub(/[.]/,"");print $NF}' <<< "php$response")
       ;;
-    7.4|74|*)
-      PHP_VERSION="php74"
+    8.1|81|*)
+      PHP_VERSION="php81"
       ;;
   esac
 

@@ -484,6 +484,18 @@ ELK_SERVER=7.9.3
 
 
 
+###
+### 1.11 Choose MailHog server image
+###
+### See here for all versions: https://hub.docker.com/r/richarvey/mailhog
+###
+MAILHOG_SERVER=latest
+#MAILHOG_SERVER=1.3-linux-arm64
+#MAILHOG_SERVER=1.2-linux-arm64
+#MAILHOG_SERVER=1-linux-arm64
+
+
+
 ################################################################################
 ###
 ### 2. Host Mounts (Your computer)
@@ -933,6 +945,26 @@ HOST_PORT_RABBIT_MGMT=15672
 RABBIT_DEFAULT_VHOST=my_vhost
 RABBIT_DEFAULT_USER=guest
 RABBIT_DEFAULT_PASS=guest
+
+
+
+################################################################################
+###
+### 14. RabbitMQ Docker Settings
+###
+################################################################################
+
+###
+### Expose MailHog Port to Host
+###
+HOST_PORT_MAILHOG=8025
+
+
+###
+### Generic MailHog Settings
+###
+MAILHOG_IMAGE=richarvey/mailhog
+MAILHOG_SMTP_ADDR=mailhog:1025
 
 
 
