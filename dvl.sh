@@ -369,64 +369,64 @@ function BootstrapWebApplication {
   fi
 
   if [[ "$WEB_MULTI" == "N" ]]; then
-    git clone --quiet "$APPREPOSITORY" "$WEBAPP_DIR/$APPNAME/$HTTPD_DOCROOT_DIR" 2&> /dev/null
+    git clone --quiet "$APPREPOSITORY" "$WEBAPP_DIR/$APPNAME/$HTTPD_DOCROOT_DIR" > /dev/null
   else
-    (cd "$WEBAPP_DIR" || exit; ln -snf "../$PARENT_APPNAME/$HTTPD_DOCROOT_DIR" "$WEBAPP_DIR/$APPNAME/$HTTPD_DOCROOT_DIR" 2&> /dev/null)
+    (cd "$WEBAPP_DIR" || exit; ln -snf "../$PARENT_APPNAME/$HTTPD_DOCROOT_DIR" "$WEBAPP_DIR/$APPNAME/$HTTPD_DOCROOT_DIR" > /dev/null)
   fi
 
   case "$currentStack" in
     magento)
       if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-magento2" "$devilboxConfDir/nginx.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-magento2" "$devilboxConfDir/nginx.yml" > /dev/null
       elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-magento2" "$devilboxConfDir/apache22.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-magento2" "$devilboxConfDir/apache22.yml" > /dev/null
       elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-magento2" "$devilboxConfDir/apache24.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-magento2" "$devilboxConfDir/apache24.yml" > /dev/null
       fi
       ;;
     nodejs)
       if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-rproxy" "$devilboxConfDir/nginx.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-rproxy" "$devilboxConfDir/nginx.yml" > /dev/null
       elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-rproxy" "$devilboxConfDir/apache22.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-rproxy" "$devilboxConfDir/apache22.yml" > /dev/null
       elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-rproxy" "$devilboxConfDir/apache24.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-rproxy" "$devilboxConfDir/apache24.yml" > /dev/null
       fi
       ;;
     laravel)
       if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-laravel" "$devilboxConfDir/nginx.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-laravel" "$devilboxConfDir/nginx.yml" > /dev/null
       elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-laravel" "$devilboxConfDir/apache22.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-laravel" "$devilboxConfDir/apache22.yml" > /dev/null
       elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-laravel" "$devilboxConfDir/apache24.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-laravel" "$devilboxConfDir/apache24.yml" > /dev/null
       fi
       ;;
     shopify)
       if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-rproxy" "$devilboxConfDir/nginx.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-rproxy" "$devilboxConfDir/nginx.yml" > /dev/null
       elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-rproxy" "$devilboxConfDir/apache22.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-rproxy" "$devilboxConfDir/apache22.yml" > /dev/null
       elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-rproxy" "$devilboxConfDir/apache24.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-rproxy" "$devilboxConfDir/apache24.yml" > /dev/null
       fi
       ;;
     bigcommerce)
       if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-rproxy" "$devilboxConfDir/nginx.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-rproxy" "$devilboxConfDir/nginx.yml" > /dev/null
       elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-rproxy" "$devilboxConfDir/apache22.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-rproxy" "$devilboxConfDir/apache22.yml" > /dev/null
       elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-rproxy" "$devilboxConfDir/apache24.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-rproxy" "$devilboxConfDir/apache24.yml" > /dev/null
       fi
       ;;
     phpweb|*)
       if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-vhost" "$devilboxConfDir/nginx.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-vhost" "$devilboxConfDir/nginx.yml" > /dev/null
       elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-vhost" "$devilboxConfDir/apache22.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-vhost" "$devilboxConfDir/apache22.yml" > /dev/null
       elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-vhost" "$devilboxConfDir/apache24.yml" 2&> /dev/null
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-vhost" "$devilboxConfDir/apache24.yml" > /dev/null
       fi
       ;;
   esac
