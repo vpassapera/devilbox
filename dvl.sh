@@ -127,12 +127,15 @@ function main {
   else
     case "$1" in
       up|start)
+        shift;
         StartServices "$@"
       ;;
       down|stop)
+        shift;
         StopServices "$@"
       ;;
       restart)
+        shift;
         RestartServices "$@"
       ;;
       reset)
@@ -146,6 +149,7 @@ function main {
         ExecShell "$@"
       ;;
       shell)
+        shift;
         OpenShell "$@"
       ;;
       --no-ansi)
@@ -170,14 +174,14 @@ function __get_default_containers() {
 }
 
 function BaseCommand {
-  docker "$@"
+  (cd "$DEVILBOX_PATH"; docker "$@")
 }
 
 function BaseComposeCommand {
   if hash docker-compose 2>/dev/null; then
-    docker-compose "$@"
+    (cd "$DEVILBOX_PATH"; docker-compose "$@")
   else
-    docker compose "$@"
+    (cd "$DEVILBOX_PATH"; docker compose "$@")
   fi
 }
 
@@ -186,22 +190,22 @@ function StartServices {
 }
 
 function StopServices {
-  BaseComposeCommand down
+  BaseComposeCommand down && BaseComposeCommand rm -f
 }
 
 function RestartServices {
-  if [ ! -n "$2" ]; then
-    StopServices && StartServices
+  if [[ -n "$*" ]]; then
+    BaseCommand restart "$@"
   else
-    BaseCommand restart "$2"
+    StopServices && StartServices
   fi
 }
 
 function OpenShell {
-  if [ ! -n "$2" ]; then
+  if [[ -z "$*" ]]; then
     BaseComposeCommand exec --user devilbox php bash -l
   else
-    BaseComposeCommand exec --user devilbox "$2" bash -l
+    BaseComposeCommand exec --user devilbox "$1" bash -l
   fi
 }
 
