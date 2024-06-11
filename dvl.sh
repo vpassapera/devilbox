@@ -282,7 +282,7 @@ function InitializeProject() {
       ;;
   esac
   if [[ "$WEB_MULTI" == "Y" ]]; then
-    while [[ $APPNAME =~ [^-a-z0-9] ]] || [[ $APPNAME == '' ]]
+    while [[ $PARENT_APPNAME =~ [^-a-z0-9] ]] || [[ $PARENT_APPNAME == '' ]]
     do
       read -r -p "${BLUE}What is the main-entry Magento webapp name?${NORMAL} " PARENT_APPNAME
     done
