@@ -32,10 +32,6 @@
 /log/mariadb-10.3/*
 /log/nginx-mainline/*
 /log/nginx-stable/*
-/log/php-fpm-5.2/*
-/log/php-fpm-5.3/*
-/log/php-fpm-5.4/*
-/log/php-fpm-5.5/*
 /log/php-fpm-5.6/*
 /log/php-fpm-7.0/*
 /log/php-fpm-7.1/*
@@ -81,10 +77,6 @@
 /cfg/percona-8.0/*.cnf
 
 # Ignore custom PHP.ini configs
-/cfg/php-ini-5.2/*.ini
-/cfg/php-ini-5.3/*.ini
-/cfg/php-ini-5.4/*.ini
-/cfg/php-ini-5.5/*.ini
 /cfg/php-ini-5.6/*.ini
 /cfg/php-ini-7.0/*.ini
 /cfg/php-ini-7.1/*.ini
@@ -96,10 +88,6 @@
 /cfg/php-ini-8.2/*.ini
 
 # Ignore custom PHP-FPM configs
-/cfg/php-fpm-5.2/php-fpm.xml
-/cfg/php-fpm-5.3/*.conf
-/cfg/php-fpm-5.4/*.conf
-/cfg/php-fpm-5.5/*.conf
 /cfg/php-fpm-5.6/*.conf
 /cfg/php-fpm-7.0/*.conf
 /cfg/php-fpm-7.1/*.conf
@@ -113,10 +101,6 @@
 
 # Ignore custom PHP-FPM startup scripts
 /autostart/*.sh
-/cfg/php-startup-5.2/*.sh
-/cfg/php-startup-5.3/*.sh
-/cfg/php-startup-5.4/*.sh
-/cfg/php-startup-5.5/*.sh
 /cfg/php-startup-5.6/*.sh
 /cfg/php-startup-7.0/*.sh
 /cfg/php-startup-7.1/*.sh
@@ -134,10 +118,6 @@
 /cfg/varnish-6/*.vcl
 
 # Ignore custom PHP-FPM modules
-/mod/php-fpm-5.2/*.so
-/mod/php-fpm-5.3/*.so
-/mod/php-fpm-5.4/*.so
-/mod/php-fpm-5.5/*.so
 /mod/php-fpm-5.6/*.so
 /mod/php-fpm-7.0/*.so
 /mod/php-fpm-7.1/*.so

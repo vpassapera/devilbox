@@ -53,7 +53,9 @@ services:
       # - ${DEVILBOX_PATH}/cfg/php-startup-7.1:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
+      - ${HOST_PATH_BACKUPDIR}:/shared/backups:rw${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/supervisor:/etc/supervisor/custom.d:rw${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/bash:/etc/bashrc-devilbox.d:rw${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/autostart:/startup.2.d:rw${MOUNT_OPTIONS}
       - devilbox-mail:/var/mail:rw${MOUNT_OPTIONS}
 
@@ -71,7 +73,9 @@ services:
       # - ${DEVILBOX_PATH}/cfg/php-startup-7.2:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
+      - ${HOST_PATH_BACKUPDIR}:/shared/backups:rw${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/supervisor:/etc/supervisor/custom.d:rw${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/bash:/etc/bashrc-devilbox.d:rw${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/autostart:/startup.2.d:rw${MOUNT_OPTIONS}
       - devilbox-mail:/var/mail:rw${MOUNT_OPTIONS}
 
@@ -89,7 +93,9 @@ services:
       # - ${DEVILBOX_PATH}/cfg/php-startup-7.3:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
+      - ${HOST_PATH_BACKUPDIR}:/shared/backups:rw${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/supervisor:/etc/supervisor/custom.d:rw${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/bash:/etc/bashrc-devilbox.d:rw${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/autostart:/startup.2.d:rw${MOUNT_OPTIONS}
       - devilbox-mail:/var/mail:rw${MOUNT_OPTIONS}
 
@@ -107,7 +113,9 @@ services:
       # - ${DEVILBOX_PATH}/cfg/php-startup-7.4:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
+      - ${HOST_PATH_BACKUPDIR}:/shared/backups:rw${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/supervisor:/etc/supervisor/custom.d:rw${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/bash:/etc/bashrc-devilbox.d:rw${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/autostart:/startup.2.d:rw${MOUNT_OPTIONS}
       - devilbox-mail:/var/mail:rw${MOUNT_OPTIONS}
 
@@ -125,7 +133,9 @@ services:
       # - ${DEVILBOX_PATH}/cfg/php-startup-8.0:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
+      - ${HOST_PATH_BACKUPDIR}:/shared/backups:rw${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/supervisor:/etc/supervisor/custom.d:rw${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/bash:/etc/bashrc-devilbox.d:rw${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/autostart:/startup.2.d:rw${MOUNT_OPTIONS}
       - devilbox-mail:/var/mail:rw${MOUNT_OPTIONS}
 
@@ -143,7 +153,9 @@ services:
       # - ${DEVILBOX_PATH}/cfg/php-startup-8.1:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
+      - ${HOST_PATH_BACKUPDIR}:/shared/backups:rw${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/supervisor:/etc/supervisor/custom.d:rw${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/bash:/etc/bashrc-devilbox.d:rw${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/autostart:/startup.2.d:rw${MOUNT_OPTIONS}
       - devilbox-mail:/var/mail:rw${MOUNT_OPTIONS}
 
@@ -161,7 +173,9 @@ services:
       # - ${DEVILBOX_PATH}/cfg/php-startup-8.2:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
+      - ${HOST_PATH_BACKUPDIR}:/shared/backups:rw${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/supervisor:/etc/supervisor/custom.d:rw${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/bash:/etc/bashrc-devilbox.d:rw${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/autostart:/startup.2.d:rw${MOUNT_OPTIONS}
       - devilbox-mail:/var/mail:rw${MOUNT_OPTIONS}
 
@@ -244,28 +258,6 @@ services:
       - httpd
 
   # -----------------------------------------------------------------------------------------------
-  # Solr
-  # -----------------------------------------------------------------------------------------------
-  solr:
-    image: solr:${SOLR_SERVER:-latest}
-    hostname: solr
-    ports:
-      - "${LOCAL_LISTEN_ADDR}${HOST_PORT_SOLR:-8983}:8983"
-    networks:
-      app_net:
-        ipv4_address: 172.16.238.220
-    volumes:
-      - devilbox-solr:/opt/solr/server/solr/mycores
-    entrypoint:
-      - docker-entrypoint.sh
-      - solr-precreate
-      - ${SOLR_CORE_NAME:-devilbox}
-    depends_on:
-      - bind
-      - php
-      - httpd
-
-  # -----------------------------------------------------------------------------------------------
   # Varnish
   # -----------------------------------------------------------------------------------------------
   varnish:
@@ -333,69 +325,10 @@ services:
       - ./entrypoint.d/elasticsearch-plugins.sh:/usr/share/elasticsearch/elasticsearch-plugins.sh:z
     entrypoint:  ["sh", "/usr/share/elasticsearch/elasticsearch-plugins.sh"]
 
-  logstash:
-    image: docker.elastic.co/logstash/logstash-oss:${ELK_SERVER:-6.6.1}
-    hostname: logstash
-    ports:
-      - "${LOCAL_LISTEN_ADDR}${HOST_PORT_ELK_LOGSTASH:-9600}:9600"
-    networks:
-      app_net:
-        ipv4_address: 172.16.238.241
-    environment:
-      - TZ=${TIMEZONE:-UTC}
-      - LOG_LEVEL=info
-      - HTTP_HOST=0.0.0.0
-      - HTTP_PORT=9600
-      - CONFIG_RELOAD_AUTOMATIC=true
-      - CONFIG_RELOAD_INTERVAL=300
-      - DB_HOST=DATABASE-SERVER
-    volumes:
-      - devilbox-logstash:/var/lib/logstash
-    depends_on:
-      - elastic
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana-oss:${ELK_SERVER:-6.6.1}
-    hostname: kibana
-    ports:
-      - "${LOCAL_LISTEN_ADDR}${HOST_PORT_ELK_KIBANA:-5601}:5601"
-    networks:
-      app_net:
-        ipv4_address: 172.16.238.242
-    environment:
-      - TZ=${TIMEZONE:-UTC}
-      - ELASTICSEARCH_HOSTS=http://elastic:9200
-      - ELASTICSEARCH_URL=http://elastic:9200
-    depends_on:
-      - elastic
-
-  # -----------------------------------------------------------------------------------------------
-  # Meilisearch
-  # -----------------------------------------------------------------------------------------------
-  meilisearch:
-    image: getmeili/meilisearch:${MEILI_SERVER:-latest}
-    hostname: meilisearch
-    command: meilisearch
-    environment:
-      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY-""}
-    ports:
-      - "${LOCAL_LISTEN_ADDR}${HOST_PORT_MEILI:-7700}:7700"
-    networks:
-      app_net:
-        ipv4_address: 172.16.238.203
-    volumes:
-      - devilbox-meilisearch:/meili_data
-    depends_on:
-      - bind
-      - php
-      - httpd
 
 ###
 ### Volumes
 ###
 volumes:
   devilbox-rabbit:
-  devilbox-solr:
   devilbox-elastic:
-  devilbox-logstash:
-  devilbox-meilisearch:

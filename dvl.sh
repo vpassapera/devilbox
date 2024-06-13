@@ -179,7 +179,7 @@ function __get_default_containers() {
   if [[ ! -z "$DEVILBOX_CONTAINERS" ]]; then
     printf %s "${DEVILBOX_CONTAINERS}"
   else
-    printf %s "bind httpd php php74 php81 php82 mysql redis elastic"
+    printf %s "bind httpd php php74 php81 php82 mysql redis elastic mailhog"
   fi
 }
 

@@ -46,10 +46,10 @@ fi
 ### PHP
 ###
 if [ "${WHICH}" = "all" ] || [ "${WHICH}" = "php" ]; then
-	SUFFIX="$( grep -E '^\s+image:\s+devilbox/php-fpm' "${CWD}/docker-compose.yml" | sed 's/.*}//g' )"
+	SUFFIX="$( grep -E '^\s+image:\s+devilbox-community/php-fpm' "${CWD}/docker-compose.yml" | sed 's/.*}//g' )"
 	IMAGES="$( grep -Eo '^#*PHP_SERVER=[.0-9]+' "${CWD}/env-example" | sed 's/.*=//g' )"
 	echo "${IMAGES}" | while read version ; do
-		docker pull devilbox/php-fpm:${version}${SUFFIX}
+		docker pull devilbox-community/php-fpm:${version}${SUFFIX}
 	done
 fi
 
