@@ -336,7 +336,7 @@ $HEALTH_PERCENT = 100 - ceil(100 * $HEALTH_FAILS / $HEALTH_TOTAL);
 					<div class="dash-box">
 						<div class="dash-box-head"><i class="fa fa-info-circle" aria-hidden="true"></i> Available CLI Tools</div>
 						<div class="dash-box-body">
-							<p><small>You can also enter the php container via <code style="background-color:#3d3d3d;">./shell.sh</code> and use the following cli tools:</small></p>
+							<p><small>You can also enter the php container via <code style="background-color:#3d3d3d;">./shell.sh</code> or <code style="background-color:#3d3d3d;">./dvl.sh shell</code> and use the following cli tools:</small></p>
 							<table class="table table-striped table-hover table-bordered table-sm font-small">
 								<thead class="thead-inverse">
 									<tr>

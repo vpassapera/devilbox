@@ -12,7 +12,6 @@ name: params
 env:
   MATRIX: >-
     [
-      {"PGSQL_SERVER": "PgSQL 9.0"},
       {"PGSQL_SERVER": "PgSQL 9.1"},
       {"PGSQL_SERVER": "PgSQL 9.2"},
       {"PGSQL_SERVER": "PgSQL 9.2-alpine"},

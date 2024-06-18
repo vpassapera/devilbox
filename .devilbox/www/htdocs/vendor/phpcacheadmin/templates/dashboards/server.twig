@@ -1,0 +1,17 @@
+{{ panels|raw }}
+<div class="mb-3 text-lg font-semibold">Loaded PHP extensions ({{ extensions|length }})</div>
+
+<div>
+    {% for extension in extensions %}
+        <a href="{{ ext_link ~ '#module_' ~ extension|replace({' ': '+'})|lower }}">
+            {{ include('components/badge.twig', {
+                text: extension,
+                txt: 'font-semibold',
+                bg: 'bg-slate-200',
+                class: 'm-1',
+            }) }}
+        </a>
+    {% endfor %}
+</div>
+
+<small class="text-xs">You can click on these badges, and it will redirect you to the appropriate section in phpinfo().</small>

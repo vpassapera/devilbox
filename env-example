@@ -331,7 +331,6 @@ MYSQL_SERVER=mariadb-10.4
 #
 # PostgreSQL without arm64 support
 #
-#PGSQL_SERVER=9.0
 #PGSQL_SERVER=9.1
 #PGSQL_SERVER=9.2-alpine
 #

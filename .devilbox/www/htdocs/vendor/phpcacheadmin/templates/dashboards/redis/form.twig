@@ -1,0 +1,82 @@
+<form method="post">
+    <input type="hidden" name="old_key" value="{{ key }}">
+    <input type="hidden" name="old_value" value="{{ value }}">
+
+    <div class="mb-3">
+        <label for="redis_type" class="mb-2 block text-sm font-semibold">Type</label>
+        {{ include('components/select.twig', {
+            id: 'redis_type',
+            options: types,
+            class: 'w-full',
+            selected: type,
+        }) }}
+    </div>
+
+    <div class="md:grid md:grid-cols-2 md:gap-2">
+        {{ include('components/input.twig', {
+            id: 'key',
+            label: 'Key',
+            value: key,
+            required: true,
+        }) }}
+
+        {{ include('components/input.twig', {
+            id: 'expire',
+            label: 'Expire (in seconds)',
+            type: 'number',
+            help: '-1 removes expiration (default).',
+            value: expire,
+            attr: ' min="-1" max="2147483647"',
+        }) }}
+    </div>
+
+    {{ include('components/input.twig', {
+        id: 'index',
+        label: 'List Index',
+        type: 'number',
+        extra_attr: ' style="display: ' ~ (type == 'list' ? 'show' : 'none') ~ ';" id="redis_index"',
+        help: 'Empty to append, -1 to prepend.',
+        value: index,
+    }) }}
+
+    {{ include('components/input.twig', {
+        id: 'score',
+        label: 'Zset Score',
+        type: 'number',
+        extra_attr: ' style="display: ' ~ (type == 'zset' ? 'show' : 'none') ~ ';" id="redis_score"',
+        value: score,
+    }) }}
+
+    {{ include('components/input.twig', {
+        id: 'hash_key',
+        label: 'Hash Key',
+        extra_attr: ' style="display: ' ~ (type == 'hash' ? 'show' : 'none') ~ ';" id="redis_hash_key"',
+        value: hash_key,
+    }) }}
+
+    {% if encoders %}
+        <div class="mb-3">
+            <label for="encoder" class="mb-2 block text-sm font-semibold">Encode function</label>
+            {{ include('components/select.twig', {
+                id: 'encoder',
+                options: encoders,
+                class: 'w-full',
+                selected: encoder,
+            }) }}
+        </div>
+    {% endif %}
+
+    {{ include('components/textarea.twig', {
+        id: 'value',
+        label: 'Value',
+        value,
+    }) }}
+
+    {{ include('components/button.twig', {
+        text: 'Save key',
+        icon: 'save',
+        id: 'submit',
+        btn_green: true,
+        submit: true,
+    }) }}
+</form>

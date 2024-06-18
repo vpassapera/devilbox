@@ -1,0 +1,37 @@
+<div class="md:grid md:grid-cols-3">
+    <div class="flex items-center">
+        <span class="font-semibold">
+            Showing {{ first_on_page }} to {{ last_on_page }} of {{ total }} items
+        </span>
+    </div>
+
+    <div class="mb-3 flex items-center gap-2 md:mb-0 md:justify-center">
+        {{ include('components/select.twig', {id: 'per_page', options: select, selected: per_page, width: 'w-16'}) }}
+        <label class="-mt-1.5 font-semibold" for="per_page">per page</label>
+    </div>
+
+    {% if pages and pages|length > 1 %}
+        <div class="flex items-center md:justify-end">
+            <ul class="inline-flex -space-x-px">
+                {% for page in pages %}
+                    {% if page == current_page %}
+                        {% set class = 'border-primary-300 bg-primary-500 text-white hover:bg-primary-600' %}
+                    {% else %}
+                        {% set class = 'border-gray-300 bg-white hover:bg-gray-100 hover:text-gray-700' %}
+                    {% endif %}
+
+                    {% set first_item = loop.first ? ' rounded-l' : '' %}
+                    {% set last_item = loop.last ? ' rounded-r' : '' %}
+
+                    <li>
+                        {% if page == '...' %}
+                            <span class="py-1.5 px-3 border {{ class }}">{{ page }}</span>
+                        {% else %}
+                            <a href="{{ url ~ page }}" class="py-1.5 px-3 border {{ class }}{{ first_item ~ last_item }}">{{ page }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>

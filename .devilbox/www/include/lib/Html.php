@@ -132,11 +132,17 @@ class Html
 				),
 				array(
 					'name' => 'Opcache GUI',
-					'path' => '/opcache.php'
+					'path' => '__OPCACHE__',
+					'target' => '_blank'
 				),
 				array(
 					'name' => 'Opcache Control Panel',
 					'path' => '/vendor/ocp.php',
+					'target' => '_blank'
+				),
+				array(
+					'name' => 'phpCacheAdmin',
+					'path' => '__PHPCACHEADMIN__',
 					'target' => '_blank'
 				)
 			)
@@ -278,7 +284,7 @@ HTML;
 				</div>
 			</nav>
 
-			<script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
+			<script src="/vendor/jquery/jquery-3.7.1.min.js"></script>
 			<script src="/vendor/tether/tether.min.js"></script>
 			<script src="/vendor/bootstrap/bootstrap.min.js"></script>
 HTML;
@@ -420,31 +426,42 @@ HTML;
 				foreach ($elements['menu'] as $el) {
 
 					// Replace
-					if ($el['path'] == '__PHPMYADMIN__') {
-						if (version_compare(loadClass('Php')->getVersion(), '5.5', '<')) {
-							$el['path'] = '/vendor/phpmyadmin-4.0/index.php';
-						} elseif (version_compare(loadClass('Php')->getVersion(), '7.1', '<')) {
-							$el['path'] = '/vendor/phpmyadmin-4.9.7/index.php';
+					if ($el['path'] === '__PHPMYADMIN__') {
+						if (version_compare(loadClass('Php')->getVersion(), '7.3', '<')) {
+							$el['path'] = '/vendor/phpmyadmin-4.9.11/index.php';
 						} else {
-							$el['path'] = '/vendor/phpmyadmin-5.1.3/index.php';
+							$el['path'] = '/vendor/phpmyadmin-5.2.1/index.php';
 						}
 					}
-					if ($el['path'] == '__PHPPGADMIN__') {
+					if ($el['path'] === '__PHPPGADMIN__') {
 						if (version_compare(loadClass('Php')->getVersion(), '7.1', '<')) {
 							$el['path'] = '/vendor/phppgadmin-5.6.0/';
 						} elseif (version_compare(loadClass('Php')->getVersion(), '7.2', '<')) {
 							$el['path'] = '/vendor/phppgadmin-7.12.1/';
 						} else {
-							$el['path'] = '/vendor/phppgadmin-7.13.0/';
+							$el['path'] = '/vendor/phppgadmin-7.14.7/';
 						}
 					}
-					if ($el['path'] == '__ADMINER__') {
-						if (version_compare(loadClass('Php')->getVersion(), '5.4', '<')) {
-							$el['path'] = '/vendor/adminer-4.6.3-en.php';
-						} elseif (version_compare(loadClass('Php')->getVersion(), '8.0', '<')){
+					if ($el['path'] === '__ADMINER__') {
+						if (version_compare(loadClass('Php')->getVersion(), '7.0', '<')){
 							$el['path'] = '/vendor/adminer-4.8.1-en.php';
 						} else {
-							$el['path'] = '/vendor/adminer-4.8.1-en.php';
+							$el['path'] = '/vendor/adminer-4.8.4-en.php';
+						}
+					}
+					if ($el['path'] === '__OPCACHE__') {
+						if (version_compare(loadClass('Php')->getVersion(), '7.1', '<')){
+							$el['path'] = '/vendor/opcache-gui-2.5.4/';
+						} else {
+							$el['path'] = '/vendor/opcache-gui-3.5.4/';
+						}
+					}
+					if ($el['path'] === '__PHPCACHEADMIN__') {
+						if (version_compare(loadClass('Php')->getVersion(), '7.4', '<')){
+							$el['path'] = '#';
+							$el['target'] = '_self';
+						} else {
+							$el['path'] = '/vendor/phpcacheadmin/';
 						}
 					}
 
