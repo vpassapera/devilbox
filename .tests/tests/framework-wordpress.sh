@@ -80,7 +80,6 @@ else
 		cd /shared/httpd/${VHOST}/wordpress \
 		&& git checkout \"\$(git tag | sort -V | tail -1)\"'" \
 	"${RETRIES}" "${DVLBOX_PATH}"
-
 fi
 
 # Setup Database

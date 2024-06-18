@@ -22,7 +22,7 @@ make init
 ```bash
 # Configure custom versions (optionally)
 make configure SRV=PHP_SERVER VER=5.6
-make configure SRV=HTTPD_SERVER VER=apache-2.2
+make configure SRV=HTTPD_SERVER VER=apache-2.4
 ```
 
 #### Start
