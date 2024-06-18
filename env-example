@@ -654,7 +654,7 @@ HTTPD_VHOST_SSL_TYPE=both
 ###
 ### When changing this value, restart the devilbox.
 ###
-HTTPD_DOCROOT_DIR=src
+HTTPD_DOCROOT_DIR=htdocs
 
 
 ###

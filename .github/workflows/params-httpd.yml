@@ -46,9 +46,9 @@ jobs:
       - name: "[Set-Output] Matrix"
         id: set-matrix
         run: |
-          echo "::set-output name=matrix::$( echo '${{ env.MATRIX }}' | jq -M -c )"
+          echo "matrix=$( echo '${{ env.MATRIX }}' | jq -M -c )" >> $GITHUB_OUTPUT
 
-      - name: "[DEBUG] Show settings'"
+      - name: "[DEBUG] Show settings"
         run: |
           echo 'Matrix'
           echo '--------------------'

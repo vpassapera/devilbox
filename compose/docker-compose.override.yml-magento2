@@ -41,7 +41,7 @@ services:
   # ------------------------------------------------------------
   php71:
     <<: *default-php
-    image: devilboxcommunity/php-fpm::7.1-prod-0.152
+    image: devilboxcommunity/php-fpm:7.1-prod-0.152
     hostname: php71
     networks:
       app_net:
@@ -62,7 +62,7 @@ services:
 
   php72:
     <<: *default-php
-    image: devilboxcommunity/php-fpm::7.2-prod-0.152
+    image: devilboxcommunity/php-fpm:7.2-prod-0.152
     hostname: php72
     networks:
       app_net:
@@ -83,7 +83,7 @@ services:
 
   php73:
     <<: *default-php
-    image: devilboxcommunity/php-fpm::7.3-prod-0.152
+    image: devilboxcommunity/php-fpm:7.3-prod-0.152
     hostname: php73
     networks:
       app_net:
@@ -104,7 +104,7 @@ services:
 
   php74:
     <<: *default-php
-    image: devilboxcommunity/php-fpm::7.4-prod-0.152
+    image: devilboxcommunity/php-fpm:7.4-prod-0.152
     hostname: php74
     networks:
       app_net:
@@ -125,7 +125,7 @@ services:
 
   php80:
     <<: *default-php
-    image: devilboxcommunity/php-fpm::8.0-prod-0.152
+    image: devilboxcommunity/php-fpm:8.0-prod-0.152
     hostname: php80
     networks:
       app_net:
@@ -146,7 +146,7 @@ services:
 
   php81:
     <<: *default-php
-    image: devilboxcommunity/php-fpm::8.1-prod-0.152
+    image: devilboxcommunity/php-fpm:8.1-prod-0.152
     hostname: php81
     networks:
       app_net:
@@ -167,7 +167,7 @@ services:
 
   php82:
     <<: *default-php
-    image: devilboxcommunity/php-fpm::8.2-prod-0.152
+    image: devilboxcommunity/php-fpm:8.2-prod-0.152
     hostname: php82
     networks:
       app_net:
@@ -188,7 +188,7 @@ services:
 
   php83:
     <<: *default-php
-    image: devilboxcommunity/php-fpm::8.3-prod-0.152
+    image: devilboxcommunity/php-fpm:8.3-prod-0.152
     hostname: php83
     networks:
       app_net:

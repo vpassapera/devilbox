@@ -136,7 +136,8 @@ class Html
 				),
 				array(
 					'name' => 'Opcache Control Panel',
-					'path' => '/vendor/ocp.php'
+					'path' => '/vendor/ocp.php',
+					'target' => '_blank'
 				)
 			)
 		)
@@ -190,6 +191,7 @@ class Html
 			<!-- Meta -->
 			<meta name="description" content="The devilbox - your customizable LAMP/LEMP stack.">
 			<meta name="author" content="cytopia">
+			<meta name="maintainer" content="nntoan">
 
 			<!-- Favicons -->
 			<link rel="apple-touch-icon" sizes="57x57" href="/assets/favicon/apple-icon-57x57.png">
@@ -268,7 +270,7 @@ HTML;
 				<div class="container justify-content-end">
 					<ul class="nav navbar-nav">
 						<li class="nav-item nav-link">Render time: {$render_time} sec</li>
-						<li class="nav-item"><a class="nav-link" target="_blank" href="https://github.com/cytopia/devilbox"><code>Github</code></a></li>
+						<li class="nav-item"><a class="nav-link" target="_blank" href="https://github.com/devilbox-community/devilbox"><code>Github</code></a></li>
 						<li class="nav-item"><a class="nav-link" href="/credits.php"><code>Credits</code></a></li>
 						<li class="nav-item"><a class="nav-link" href="/support.php"><code>Support</code></a></li>
 						<li class="nav-item"><a class="nav-link" href="/debug.php"><code>Debug ({$errors})</code></a></li>

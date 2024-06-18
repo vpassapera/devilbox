@@ -200,4 +200,8 @@ test-smoke-container:
 ### Ensure .env file exists
 ###
 ../.env:
+	cat "../docker-compose.yml" \
+		| perl -0 -pe "s/HTTPD_DOCROOT_DIR=src/HTTPD_DOCROOT_DIR=htdocs/g" \
+		> "../env-example.tmp"
+	yes | mv -f "../env-example.tmp" "../env-example"
 	install -m 0644 ../env-example ../.env

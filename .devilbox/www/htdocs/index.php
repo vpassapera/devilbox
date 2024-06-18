@@ -348,10 +348,10 @@ $HEALTH_PERCENT = 100 - ceil(100 * $HEALTH_FAILS / $HEALTH_TOTAL);
 										<th style="width: 50%;">Angular Cli</th>
 										<td id="app_angular_cli"></td>
 									</tr>
-									<tr>
-										<th>AsgardCMS Installer</th>
-										<td id="app_asgardcms_installer"></td>
-									</tr>
+<!--									<tr>-->
+<!--										<th>AsgardCMS Installer</th>-->
+<!--										<td id="app_asgardcms_installer"></td>-->
+<!--									</tr>-->
 									<tr>
 										<th>Codeception</th>
 										<td id="app_codeception"></td>
@@ -380,10 +380,10 @@ $HEALTH_PERCENT = 100 - ceil(100 * $HEALTH_FAILS / $HEALTH_TOTAL);
 										<th>Laravel Installer</th>
 										<td id="app_laravel_installer"></td>
 									</tr>
-									<tr>
-										<th>Laravel Lumen</th>
-										<td id="app_laravel_lumen"></td>
-									</tr>
+<!--									<tr>-->
+<!--										<th>Laravel Lumen</th>-->
+<!--										<td id="app_laravel_lumen"></td>-->
+<!--									</tr>-->
 									<tr>
 										<th>Mupdf Tools</th>
 										<td id="app_mupdf_tools"></td>

@@ -169,6 +169,13 @@ nav.navbar {
 
 
 
+/* Overwrites for xdebug_info();
+-------------------------------------------------- */
+a.navbar-brand, a.nav-link, .nav-item.dropdown a  {
+	text-decoration: none !important;
+}
+
+
 
 /* mail.php;
 -------------------------------------------------- */
