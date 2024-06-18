@@ -1,0 +1,16 @@
+{% if panels %}
+    <div class="md:grid {{ panels|length >= 3 ? 'md:grid-cols-3' : 'md:grid-cols-2' }} md:gap-4">
+        {% for panel in panels %}
+            {% if not panel.error %}
+                <div>{{ include('partials/info_table.twig', {
+                        server_id: panel.server_id,
+                        panel_title: panel.title,
+                        array: panel.data,
+                        moreinfo: panel.moreinfo,
+                    }) }}</div>
+            {% else %}
+                {{ panel.error }}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}

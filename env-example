@@ -331,7 +331,6 @@ MYSQL_SERVER=mariadb-10.4
 #
 # PostgreSQL without arm64 support
 #
-#PGSQL_SERVER=9.0
 #PGSQL_SERVER=9.1
 #PGSQL_SERVER=9.2-alpine
 #
@@ -654,7 +653,7 @@ HTTPD_VHOST_SSL_TYPE=both
 ###
 ### When changing this value, restart the devilbox.
 ###
-HTTPD_DOCROOT_DIR=src
+HTTPD_DOCROOT_DIR=htdocs
 
 
 ###

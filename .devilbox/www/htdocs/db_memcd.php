@@ -28,7 +28,7 @@
 									<th>Size</th>
 									<th>TTL</th>
 									<th>Value</th>
-								</th>
+								</tr>
 							</thead>
 							<tbody>
 								<?php foreach (loadClass('Memcd')->getKeys() as $data): ?>

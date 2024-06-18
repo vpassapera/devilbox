@@ -13,7 +13,7 @@ DVLBOX_PATH="$( cd "${SCRIPT_PATH}/../.." && pwd -P )"
 . "${SCRIPT_PATH}/../scripts/.lib.sh"
 
 RETRIES=10
-DISABLED_VERSIONS=("5.2" "5.3" "5.4")
+DISABLED_VERSIONS=("")
 
 
 echo

@@ -12,7 +12,6 @@ name: params
 env:
   MATRIX: >-
     [
-      {"PGSQL_SERVER": "PgSQL 9.0"},
       {"PGSQL_SERVER": "PgSQL 9.1"},
       {"PGSQL_SERVER": "PgSQL 9.2"},
       {"PGSQL_SERVER": "PgSQL 9.2-alpine"},
@@ -62,9 +61,9 @@ jobs:
       - name: "[Set-Output] Matrix"
         id: set-matrix
         run: |
-          echo "::set-output name=matrix::$( echo '${{ env.MATRIX }}' | jq -M -c )"
+          echo "matrix=$( echo '${{ env.MATRIX }}' | jq -M -c )" >> $GITHUB_OUTPUT
 
-      - name: "[DEBUG] Show settings'"
+      - name: "[DEBUG] Show settings"
         run: |
           echo 'Matrix'
           echo '--------------------'

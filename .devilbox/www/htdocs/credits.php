@@ -19,7 +19,7 @@
 
 				<div class="col-md-6">
 					<h2>Contributors</h2>
-					<p>The following people have contributed to the <a href="https://github.com/cytopia/devilbox/graphs/contributors">Devilbox</a>.</p>
+					<p>The following people have contributed to the <a href="https://github.com/devilbox-community/devilbox/graphs/contributors">Devilbox</a>.</p>
 					<table class="table table-striped ">
 						<thead class="thead-inverse ">
 							<tr>
@@ -34,6 +34,11 @@
 								<td>Project creator</td>
 								<td><i class="fa fa-github-alt" aria-hidden="true"></i> <a href="https://github.com/cytopia">cytopia</a></td>
 							</tr>
+                            <tr>
+								<td>Toan Nguyen</td>
+								<td>Project maintainer</td>
+								<td><i class="fa fa-github-alt" aria-hidden="true"></i> <a href="https://github.com/nntoan">nntoan</a></td>
+							</tr>
 							<tr>
 								<td>Maifz</td>
 								<td>Logos</td>
@@ -41,13 +46,13 @@
 							</tr>
 						</tbody>
 					</table>
-					<p>If you like to contribute, have a lookt at the <a href="https://github.com/cytopia/devilbox/blob/master/CONTRIBUTING.md">Contributing Guidelines</a>.</p>
+					<p>If you like to contribute, have a lookt at the <a href="https://github.com/devilbox-community/devilbox/blob/master/CONTRIBUTING.md">Contributing Guidelines</a>.</p>
 				</div>
 
 
 				<div class="col-md-6">
 					<h2>Libraries</h2>
-					<p>The <a href="https://github.com/cytopia/devilbox">Devilbox</a> includes several libraries which are listed below.</p>
+					<p>The <a href="https://github.com/devilbox-community/devilbox">Devilbox</a> includes several libraries which are listed below.</p>
 					<table class="table table-striped ">
 						<thead class="thead-inverse ">
 							<tr>

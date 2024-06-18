@@ -336,7 +336,7 @@ $HEALTH_PERCENT = 100 - ceil(100 * $HEALTH_FAILS / $HEALTH_TOTAL);
 					<div class="dash-box">
 						<div class="dash-box-head"><i class="fa fa-info-circle" aria-hidden="true"></i> Available CLI Tools</div>
 						<div class="dash-box-body">
-							<p><small>You can also enter the php container via <code style="background-color:#3d3d3d;">./shell.sh</code> and use the following cli tools:</small></p>
+							<p><small>You can also enter the php container via <code style="background-color:#3d3d3d;">./shell.sh</code> or <code style="background-color:#3d3d3d;">./dvl.sh shell</code> and use the following cli tools:</small></p>
 							<table class="table table-striped table-hover table-bordered table-sm font-small">
 								<thead class="thead-inverse">
 									<tr>
@@ -348,10 +348,10 @@ $HEALTH_PERCENT = 100 - ceil(100 * $HEALTH_FAILS / $HEALTH_TOTAL);
 										<th style="width: 50%;">Angular Cli</th>
 										<td id="app_angular_cli"></td>
 									</tr>
-									<tr>
-										<th>AsgardCMS Installer</th>
-										<td id="app_asgardcms_installer"></td>
-									</tr>
+<!--									<tr>-->
+<!--										<th>AsgardCMS Installer</th>-->
+<!--										<td id="app_asgardcms_installer"></td>-->
+<!--									</tr>-->
 									<tr>
 										<th>Codeception</th>
 										<td id="app_codeception"></td>
@@ -380,10 +380,10 @@ $HEALTH_PERCENT = 100 - ceil(100 * $HEALTH_FAILS / $HEALTH_TOTAL);
 										<th>Laravel Installer</th>
 										<td id="app_laravel_installer"></td>
 									</tr>
-									<tr>
-										<th>Laravel Lumen</th>
-										<td id="app_laravel_lumen"></td>
-									</tr>
+<!--									<tr>-->
+<!--										<th>Laravel Lumen</th>-->
+<!--										<td id="app_laravel_lumen"></td>-->
+<!--									</tr>-->
 									<tr>
 										<th>Mupdf Tools</th>
 										<td id="app_mupdf_tools"></td>

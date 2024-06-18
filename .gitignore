@@ -86,6 +86,7 @@
 /cfg/php-ini-8.0/*.ini
 /cfg/php-ini-8.1/*.ini
 /cfg/php-ini-8.2/*.ini
+/cfg/php-ini-8.3/*.ini
 
 # Ignore custom PHP-FPM configs
 /cfg/php-fpm-5.6/*.conf

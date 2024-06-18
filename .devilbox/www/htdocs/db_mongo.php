@@ -27,7 +27,7 @@
 									<th>Name</th>
 									<th>Size</th>
 									<th>Empty</th>
-								</th>
+								</tr>
 							</thead>
 							<tbody>
 								<?php foreach (loadClass('Mongo')->getDatabases() as $db): ?>

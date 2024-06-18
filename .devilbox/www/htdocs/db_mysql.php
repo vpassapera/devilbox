@@ -34,7 +34,7 @@ $len_size = 9;
 									<th>Collation</th>
 									<th>Tables</th>
 									<th>Size</th>
-								</th>
+								</tr>
 							</thead>
 							<tbody>
 								<?php foreach (loadClass('Mysql')->getDatabases() as $name => $keys): ?>

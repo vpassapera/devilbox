@@ -55,6 +55,10 @@ endif
 ### Pull currently setup images
 ###
 pull: ../.env
+	cat "../docker-compose.yml" \
+		| perl -0 -pe "s/# version: '2.3'/version: '2.3'/g" \
+		> "../docker-compose.yml.tmp"
+	yes | mv -f "../docker-compose.yml.tmp" "../docker-compose.yml"
 	@$(PWD)/scripts/compose-pull.sh
 
 
@@ -196,4 +200,8 @@ test-smoke-container:
 ### Ensure .env file exists
 ###
 ../.env:
+	cat "../env-example" \
+		| perl -0 -pe "s/HTTPD_DOCROOT_DIR=src/HTTPD_DOCROOT_DIR=htdocs/g" \
+		> "../env-example.tmp"
+	yes | mv -f "../env-example.tmp" "../env-example"
 	install -m 0644 ../env-example ../.env

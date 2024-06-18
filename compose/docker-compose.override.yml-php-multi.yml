@@ -1,6 +1,10 @@
 # vim: set ft=yaml:
 ---
-version: '2.3'
+###
+# Uncommenting the following line if context is lower version of Docker
+#
+# version: '2.3'
+################################################################
 
 # ------------------------------------------------------------
 # Yaml Default
@@ -36,7 +40,7 @@ services:
 
   php56:
     <<: *default-php
-    image: devilbox/php-fpm:5.6-prod-0.151
+    image: devilboxcommunity/php-fpm:5.6-prod-0.152
     hostname: php56
     networks:
       app_net:
@@ -45,6 +49,7 @@ services:
       # Specific volumes
       - ${DEVILBOX_PATH}/cfg/php-ini-5.6:/etc/php-custom.d:ro${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/cfg/php-fpm-5.6:/etc/php-fpm-custom.d:ro${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/cfg/msmtp/msmtprc:/etc/msmtprc:ro${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/cfg/php-startup-5.6:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
@@ -56,7 +61,7 @@ services:
 
   php70:
     <<: *default-php
-    image: devilbox/php-fpm:7.0-prod-0.151
+    image: devilboxcommunity/php-fpm:7.0-prod-0.152
     hostname: php70
     networks:
       app_net:
@@ -65,6 +70,7 @@ services:
       # Specific volumes
       - ${DEVILBOX_PATH}/cfg/php-ini-7.0:/etc/php-custom.d:ro${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/cfg/php-fpm-7.0:/etc/php-fpm-custom.d:ro${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/cfg/msmtp/msmtprc:/etc/msmtprc:ro${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/cfg/php-startup-7.0:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
@@ -76,7 +82,7 @@ services:
 
   php71:
     <<: *default-php
-    image: devilbox/php-fpm:7.1-prod-0.151
+    image: devilboxcommunity/php-fpm:7.1-prod-0.152
     hostname: php71
     networks:
       app_net:
@@ -85,6 +91,7 @@ services:
       # Specific volumes
       - ${DEVILBOX_PATH}/cfg/php-ini-7.1:/etc/php-custom.d:ro${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/cfg/php-fpm-7.1:/etc/php-fpm-custom.d:ro${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/cfg/msmtp/msmtprc:/etc/msmtprc:ro${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/cfg/php-startup-7.1:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
@@ -96,7 +103,7 @@ services:
 
   php72:
     <<: *default-php
-    image: devilbox/php-fpm:7.2-prod-0.151
+    image: devilboxcommunity/php-fpm:7.2-prod-0.152
     hostname: php72
     networks:
       app_net:
@@ -105,6 +112,7 @@ services:
       # Specific volumes
       - ${DEVILBOX_PATH}/cfg/php-ini-7.2:/etc/php-custom.d:ro${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/cfg/php-fpm-7.2:/etc/php-fpm-custom.d:ro${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/cfg/msmtp/msmtprc:/etc/msmtprc:ro${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/cfg/php-startup-7.2:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
@@ -116,7 +124,7 @@ services:
 
   php73:
     <<: *default-php
-    image: devilbox/php-fpm:7.3-prod-0.151
+    image: devilboxcommunity/php-fpm:7.3-prod-0.152
     hostname: php73
     networks:
       app_net:
@@ -125,6 +133,7 @@ services:
       # Specific volumes
       - ${DEVILBOX_PATH}/cfg/php-ini-7.3:/etc/php-custom.d:ro${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/cfg/php-fpm-7.3:/etc/php-fpm-custom.d:ro${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/cfg/msmtp/msmtprc:/etc/msmtprc:ro${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/cfg/php-startup-7.3:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
@@ -136,7 +145,7 @@ services:
 
   php74:
     <<: *default-php
-    image: devilbox/php-fpm:7.4-prod-0.151
+    image: devilboxcommunity/php-fpm:7.4-prod-0.152
     hostname: php74
     networks:
       app_net:
@@ -145,6 +154,7 @@ services:
       # Specific volumes
       - ${DEVILBOX_PATH}/cfg/php-ini-7.4:/etc/php-custom.d:ro${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/cfg/php-fpm-7.4:/etc/php-fpm-custom.d:ro${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/cfg/msmtp/msmtprc:/etc/msmtprc:ro${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/cfg/php-startup-7.4:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
@@ -156,7 +166,7 @@ services:
 
   php80:
     <<: *default-php
-    image: devilbox/php-fpm:8.0-prod-0.151
+    image: devilboxcommunity/php-fpm:8.0-prod-0.152
     hostname: php80
     networks:
       app_net:
@@ -165,6 +175,7 @@ services:
       # Specific volumes
       - ${DEVILBOX_PATH}/cfg/php-ini-8.0:/etc/php-custom.d:ro${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/cfg/php-fpm-8.0:/etc/php-fpm-custom.d:ro${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/cfg/msmtp/msmtprc:/etc/msmtprc:ro${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/cfg/php-startup-8.0:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
@@ -176,7 +187,7 @@ services:
 
   php81:
     <<: *default-php
-    image: devilbox/php-fpm:8.1-prod-0.151
+    image: devilboxcommunity/php-fpm:8.1-prod-0.152
     hostname: php81
     networks:
       app_net:
@@ -185,6 +196,7 @@ services:
       # Specific volumes
       - ${DEVILBOX_PATH}/cfg/php-ini-8.1:/etc/php-custom.d:ro${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/cfg/php-fpm-8.1:/etc/php-fpm-custom.d:ro${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/cfg/msmtp/msmtprc:/etc/msmtprc:ro${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/cfg/php-startup-8.1:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
@@ -196,7 +208,7 @@ services:
 
   php82:
     <<: *default-php
-    image: devilbox/php-fpm:8.2-prod-0.151
+    image: devilboxcommunity/php-fpm:8.2-prod-0.152
     hostname: php82
     networks:
       app_net:
@@ -205,6 +217,7 @@ services:
       # Specific volumes
       - ${DEVILBOX_PATH}/cfg/php-ini-8.2:/etc/php-custom.d:ro${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/cfg/php-fpm-8.2:/etc/php-fpm-custom.d:ro${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/cfg/msmtp/msmtprc:/etc/msmtprc:ro${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/cfg/php-startup-8.2:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}
@@ -216,7 +229,7 @@ services:
 
   php83:
     <<: *default-php
-    image: devilbox-community/php-fpm:8.3-prod-0.152
+    image: devilboxcommunity/php-fpm:8.3-prod-0.152
     hostname: php83
     networks:
       app_net:
@@ -225,6 +238,7 @@ services:
       # Specific volumes
       - ${DEVILBOX_PATH}/cfg/php-ini-8.3:/etc/php-custom.d:ro${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/cfg/php-fpm-8.3:/etc/php-fpm-custom.d:ro${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/cfg/msmtp/msmtprc:/etc/msmtprc:ro${MOUNT_OPTIONS}
       # - ${DEVILBOX_PATH}/cfg/php-startup-8.3:/startup.1.d:rw${MOUNT_OPTIONS}
       # Generic volumes
       - ${HOST_PATH_HTTPD_DATADIR}:/shared/httpd:rw${MOUNT_OPTIONS}

@@ -14,9 +14,6 @@ env:
   # PgSQL server versions. That's why we need to tell those combinations to use an old PgSQL server
   MATRIX: >-
     [
-      {"HTTPD_SERVER": "apache-2.2", "HTTPD_FLAVOUR": "alpine"},
-      {"HTTPD_SERVER": "apache-2.2", "HTTPD_FLAVOUR": "debian"},
-
       {"HTTPD_SERVER": "apache-2.4", "HTTPD_FLAVOUR": "alpine"},
       {"HTTPD_SERVER": "apache-2.4", "HTTPD_FLAVOUR": "debian"},
 
@@ -49,9 +46,9 @@ jobs:
       - name: "[Set-Output] Matrix"
         id: set-matrix
         run: |
-          echo "::set-output name=matrix::$( echo '${{ env.MATRIX }}' | jq -M -c )"
+          echo "matrix=$( echo '${{ env.MATRIX }}' | jq -M -c )" >> $GITHUB_OUTPUT
 
-      - name: "[DEBUG] Show settings'"
+      - name: "[DEBUG] Show settings"
         run: |
           echo 'Matrix'
           echo '--------------------'

@@ -181,9 +181,7 @@ class Httpd extends BaseClass implements BaseInterface
 		}
 		$version = $this->getVersion();
 
-		if (preg_match('/^2\.2.*/', $version)) {
-			return 'apache22.yml';
-		} elseif (preg_match('/^2\.4.*/', $version)) {
+		if (preg_match('/^2\.4.*/', $version)) {
 			return 'apache24.yml';
 		} else {
 			return false;
@@ -216,6 +214,11 @@ class Httpd extends BaseClass implements BaseInterface
 		$fp = fopen($file, 'r');
 		$cont = stream_get_contents($fp);
 		fclose($fp);
+
+		$semicolon_pos = strpos($cont, ';');
+		if($semicolon_pos !== false && $semicolon_pos == 0) {
+			return 'default';
+		}
 
 		// conf:<type>:<proto>:<server>:<port>
 		$arr = explode(':', $cont);

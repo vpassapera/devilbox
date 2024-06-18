@@ -44,11 +44,11 @@ if (loadClass('Helper')->isLoggedIn()) {
 				$_GET['software'] => (($version = loadClass('Php')->getAngularCliVersion()) !== false) ? $version : $no
 			));
 		}
-		else if ($_GET['software'] == 'asgardcms_installer') {
-			echo json_encode(array(
-				$_GET['software'] => (($version = loadClass('Php')->getAsgardCmsInstallerVersion()) !== false) ? $version : $no
-			));
-		}
+//		else if ($_GET['software'] == 'asgardcms_installer') {
+//			echo json_encode(array(
+//				$_GET['software'] => (($version = loadClass('Php')->getAsgardCmsInstallerVersion()) !== false) ? $version : $no
+//			));
+//		}
 		else if ($_GET['software'] == 'codeception') {
 			echo json_encode(array(
 				$_GET['software'] => (($version = loadClass('Php')->getCodeceptionVersion()) !== false) ? $version : $no
@@ -84,11 +84,11 @@ if (loadClass('Helper')->isLoggedIn()) {
 				$_GET['software'] => (($version = loadClass('Php')->getLaravelInstallerVersion()) !== false) ? $version : $no
 			));
 		}
-		else if ($_GET['software'] == 'laravel_lumen') {
-			echo json_encode(array(
-				$_GET['software'] => (($version = loadClass('Php')->getLaravelLumenVersion()) !== false) ? $version : $no
-			));
-		}
+//		else if ($_GET['software'] == 'laravel_lumen') {
+//			echo json_encode(array(
+//				$_GET['software'] => (($version = loadClass('Php')->getLaravelLumenVersion()) !== false) ? $version : $no
+//			));
+//		}
 		else if ($_GET['software'] == 'mds') {
 			echo json_encode(array(
 				$_GET['software'] => (($version = loadClass('Php')->getMdsVersion()) !== false) ? $version : $no

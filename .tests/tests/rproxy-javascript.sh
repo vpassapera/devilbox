@@ -70,7 +70,6 @@ run "docker-compose exec --user devilbox -T php mkdir -p /shared/httpd/${RPROXY_
 ###
 ### Apply default vhost-gen reverse proxy configurations
 ###
-run "cp ${DVLBOX_PATH}/cfg/vhost-gen/apache22.yml-example-rproxy ${SCRIPT_PATH}/../www/${RPROXY_NAME}/${HTTPD_TEMPLATE_DIR}/apache22.yml" "${RETRIES}"
 run "cp ${DVLBOX_PATH}/cfg/vhost-gen/apache24.yml-example-rproxy ${SCRIPT_PATH}/../www/${RPROXY_NAME}/${HTTPD_TEMPLATE_DIR}/apache24.yml" "${RETRIES}"
 run "cp ${DVLBOX_PATH}/cfg/vhost-gen/nginx.yml-example-rproxy    ${SCRIPT_PATH}/../www/${RPROXY_NAME}/${HTTPD_TEMPLATE_DIR}/nginx.yml" "${RETRIES}"
 
@@ -78,7 +77,6 @@ run "cp ${DVLBOX_PATH}/cfg/vhost-gen/nginx.yml-example-rproxy    ${SCRIPT_PATH}/
 ###
 ### Apply custom configuration to reverse proxy files
 ###
-replace ":${VHOSTGEN_TPL_DEFAULT_PORT}" ":${RPROXY_PORT}" "${SCRIPT_PATH}/../www/${RPROXY_NAME}/${HTTPD_TEMPLATE_DIR}/apache22.yml"
 replace ":${VHOSTGEN_TPL_DEFAULT_PORT}" ":${RPROXY_PORT}" "${SCRIPT_PATH}/../www/${RPROXY_NAME}/${HTTPD_TEMPLATE_DIR}/apache24.yml"
 replace ":${VHOSTGEN_TPL_DEFAULT_PORT}" ":${RPROXY_PORT}" "${SCRIPT_PATH}/../www/${RPROXY_NAME}/${HTTPD_TEMPLATE_DIR}/nginx.yml"
 

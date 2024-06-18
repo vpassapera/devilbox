@@ -6,6 +6,18 @@ Make sure to have a look at [UPDATING.md](https://github.com/cytopia/devilbox/bl
 ## Unreleased
 
 
+## Release v3.0.0-beta-0.5 (2024-06-18)
+
+### Added
+- Support PHP 8.3
+- New shell script `dvl.sh` which support initialize projects and all daily stuff of Devilbox
+
+### Changed
+- Replace `mhsendmail` with `msmtp`
+- Remove unsupported PHP version 5.2 -> 5.5
+- Default TLD_SUFFIX now changed to `lvh.me`
+
+
 ## Release v3.0.0-beta-0.4 (2022-01-30)
 
 ### Fixed

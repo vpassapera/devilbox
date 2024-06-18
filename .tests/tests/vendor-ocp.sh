@@ -53,7 +53,7 @@ if [ "$( run "\
 	curl -sS --fail 'http://localhost:${HOST_PORT_HTTPD}${URL}' \
 	| tac \
 	| tac \
-	| grep -Ec 'Used Memory'" \
+	| grep -Ec 'General Host Information'" \
 	"${RETRIES}" "" "0" )" != "1" ]; then
 	printf "\\r[FAIL] Fetch %s\\n" "${URL}"
 	run "curl -sS 'http://localhost:${HOST_PORT_HTTPD}${URL}' || true"
@@ -64,14 +64,14 @@ else
 fi
 
 
-URL="/vendor/ocp.php?FILES=1&GROUP=2&SORT=3"
+URL="/vendor/ocp.php?view=FILES"
 printf "[TEST] Fetch %s" "${URL}"
 if [ "$( run "\
 	curl -sS --fail 'http://localhost:${HOST_PORT_HTTPD}${URL}' \
 	| tac \
 	| tac \
-	| grep -Ec 'files cached'" \
-	"${RETRIES}" "" "0" )" != "1" ]; then
+	| grep -Ec 'Cached Scripts'" \
+	"${RETRIES}" "" "0" )" != "3" ]; then
 	printf "\\r[FAIL] Fetch %s\\n" "${URL}"
 	run "curl -sS 'http://localhost:${HOST_PORT_HTTPD}${URL}' || true"
 	run "curl -sS -I 'http://localhost:${HOST_PORT_HTTPD}${URL}' || true"

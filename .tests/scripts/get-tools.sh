@@ -19,7 +19,7 @@ RETRIES=10
 # FUNCTIONS
 # -------------------------------------------------------------------------------------------------
 
-PHP_TAG="$( grep 'devilbox/php' "${DVLBOX_PATH}/docker-compose.yml" | sed 's/^.*-work-//g' )"
-PHP_TOOLS="$( run "curl -sS 'https://raw.githubusercontent.com/devilbox/docker-php-fpm/${PHP_TAG}/doc/available-tools.md'" "${RETRIES}" )";
+PHP_TAG="$( grep 'devilboxcommunity/php' "${DVLBOX_PATH}/docker-compose.yml" | sed_command 's/^.*-work-//g' )"
+PHP_TOOLS="$( run "curl -sS 'https://raw.githubusercontent.com/devilbox-community/docker-php-fpm/${PHP_TAG}/doc/available-tools.md'" "${RETRIES}" )";
 
 echo "${PHP_TOOLS}" | grep -A 1000000 'TOOLS_WORK_START'
