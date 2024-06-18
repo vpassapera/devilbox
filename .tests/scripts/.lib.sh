@@ -4,6 +4,8 @@ set -e
 set -u
 set -o pipefail
 
+OSTYPE="$(uname -s)"
+
 # -------------------------------------------------------------------------------------------------
 # Pre-check
 # -------------------------------------------------------------------------------------------------
@@ -296,4 +298,18 @@ create_vhost_dir() {
 		run "docker-compose exec --user devilbox -T php bash -c 'mkdir -p /shared/httpd/${vhost} && sleep 5;'" "1" "${DVLBOX_PATH}"
 	done
 	echo "Vhost is present: ${vhost}"
+}
+
+###
+### Swap sed commands
+###
+sed_command() {
+	local sed_command
+
+	case "$OSTYPE" in
+		darwin*)  sed_command='gsed' ;;
+		*)  sed_command='sed' ;;
+	esac
+
+	$sed_command "$@"
 }
