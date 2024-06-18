@@ -12,8 +12,8 @@ DVLBOX_PATH="$( cd "${SCRIPT_PATH}/../.." && pwd -P )"
 # shellcheck disable=SC1090
 . "${SCRIPT_PATH}/../scripts/.lib.sh"
 
-RETRIES=10
-DISABLED_VERSIONS=("5.2" "5.3" "5.4")
+RETRIES=3
+DISABLED_VERSIONS=("")
 
 
 echo

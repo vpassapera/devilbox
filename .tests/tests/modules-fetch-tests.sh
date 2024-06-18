@@ -12,7 +12,7 @@ DVLBOX_PATH="$( cd "${SCRIPT_PATH}/../.." && pwd -P )"
 # shellcheck disable=SC1090
 . "${SCRIPT_PATH}/../scripts/.lib.sh"
 
-RETRIES=10
+RETRIES=3
 
 
 echo
@@ -41,12 +41,12 @@ VHOST="${1}"
 # The following ensures to download the module test directory
 
 # Where to download from
-TEST_REPO="https://github.com/devilbox/docker-php-fpm"
+TEST_REPO="https://github.com/devilbox-community/docker-php-fpm"
 TEST_PATH="tests/mods/modules"
 
 # Get current PHP_FPM git tag or branch
 PHP_FPM_GIT_SLUG="$( \
-	grep -E '^[[:space:]]+image:[[:space:]]+devilbox/php-fpm:' "${DVLBOX_PATH}/docker-compose.yml" \
+	grep -E '^[[:space:]]+image:[[:space:]]+devilboxcommunity/php-fpm:' "${DVLBOX_PATH}/docker-compose.yml" \
 	| perl -p -e 's/.*(base|mods|prod|work|)-//g'
 )"
 

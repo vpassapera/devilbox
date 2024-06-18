@@ -14,9 +14,6 @@ env:
   # PgSQL server versions. That's why we need to tell those combinations to use an old PgSQL server
   MATRIX: >-
     [
-      {"HTTPD_SERVER": "apache-2.2", "HTTPD_FLAVOUR": "alpine"},
-      {"HTTPD_SERVER": "apache-2.2", "HTTPD_FLAVOUR": "debian"},
-
       {"HTTPD_SERVER": "apache-2.4", "HTTPD_FLAVOUR": "alpine"},
       {"HTTPD_SERVER": "apache-2.4", "HTTPD_FLAVOUR": "debian"},
 

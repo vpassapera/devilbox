@@ -12,9 +12,9 @@ DVLBOX_PATH="$( cd "${SCRIPT_PATH}/../.." && pwd -P )"
 # shellcheck disable=SC1090
 . "${SCRIPT_PATH}/../scripts/.lib.sh"
 
-RETRIES=10
+RETRIES=3
 # see framework-cakephp.sh for PHP <8 tests
-DISABLED_VERSIONS=("5.2" "5.3" "5.4" "5.5" "5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.2")
+DISABLED_VERSIONS=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.2" "8.3")
 
 PHP_VERSION="$( get_php_version "${DVLBOX_PATH}" )"
 

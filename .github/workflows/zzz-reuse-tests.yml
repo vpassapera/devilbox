@@ -120,7 +120,7 @@ jobs:
       # Startup
       # ------------------------------------------------------------
       - name: "[Startup] Pull images"
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -128,7 +128,7 @@ jobs:
             make pull
 
       - name: "[Startup] Start Devilbox"
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -136,7 +136,7 @@ jobs:
             make start
 
       - name: "[Startup] Show Docker logs"
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -147,7 +147,7 @@ jobs:
       # Run tests
       # ------------------------------------------------------------
       - name: Test Modules
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -155,7 +155,7 @@ jobs:
             make test-smoke-modules
 
       - name: Test Config
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -164,7 +164,7 @@ jobs:
         if: success() || failure()
 
       - name: Test Intranet
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -173,7 +173,7 @@ jobs:
         if: success() || failure()
 
       - name: Test Vendors
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -182,7 +182,7 @@ jobs:
         if: success() || failure()
 
       - name: Test Vhosts
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -191,7 +191,7 @@ jobs:
         if: success() || failure()
 
       - name: Test Reverse Proxy
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -200,7 +200,7 @@ jobs:
         if: success() || failure()
 
       - name: Test SSL
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -209,7 +209,7 @@ jobs:
         if: success() || failure()
 
       - name: Test Bind
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -218,7 +218,7 @@ jobs:
         if: success() || failure()
 
       - name: Test Autostart
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -227,7 +227,7 @@ jobs:
         if: success() || failure()
 
       - name: "Test Framework: CakePHP"
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -236,7 +236,7 @@ jobs:
         if: success() || failure()
 
       - name: "Test Framework: Drupal"
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -245,7 +245,7 @@ jobs:
         if: success() || failure()
 
       - name: "Test Framework: Wordpress"
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -254,7 +254,7 @@ jobs:
         if: success() || failure()
 
       - name: "Test Container"
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -266,7 +266,7 @@ jobs:
       # Finish
       # ------------------------------------------------------------
       - name: "Finish: Docker logs"
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
@@ -275,7 +275,7 @@ jobs:
         if: success() || failure()
 
       - name: "Finish: Shutdown"
-        uses: cytopia/shell-command-retry-action@v0.1.3
+        uses: devilbox-community/github-actions/.github/actions/shell-command-retry-action@master
         with:
           retries: 3
           workdir: "${{ github.workspace }}/.tests/"
