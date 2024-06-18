@@ -44,7 +44,7 @@ env:
       {"PHP_SERVER": "PHP 7.4", "HTTPD_SERVER": "nginx-mainline"},
       {"PHP_SERVER": "PHP 8.0", "HTTPD_SERVER": "nginx-mainline"},
       {"PHP_SERVER": "PHP 8.1", "HTTPD_SERVER": "nginx-mainline"},
-      {"PHP_SERVER": "PHP 8.2", "HTTPD_SERVER": "nginx-mainline"}
+      {"PHP_SERVER": "PHP 8.2", "HTTPD_SERVER": "nginx-mainline"},
       {"PHP_SERVER": "PHP 8.3", "HTTPD_SERVER": "nginx-mainline"}
     ]
 
