@@ -213,6 +213,9 @@ services:
       # to overwrite the default PHP-FPM configuration
       - ${DEVILBOX_PATH}/cfg/php-fpm-${PHP_SERVER}:/etc/php-fpm-custom.d:ro${MOUNT_OPTIONS}
 
+      # Mount msmtp configuration to Devilbox
+      - ${DEVILBOX_PATH}/cfg/msmtp/msmtprc:/etc/msmtprc:ro${MOUNT_OPTIONS}
+
       # Mount devilbox user-defined PHP-FPM startup *.sh scripts
       - ${DEVILBOX_PATH}/cfg/php-startup-${PHP_SERVER}:/startup.1.d:rw${MOUNT_OPTIONS}
       - ${DEVILBOX_PATH}/autostart:/startup.2.d:rw${MOUNT_OPTIONS}
