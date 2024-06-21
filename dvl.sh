@@ -406,7 +406,7 @@ function BootstrapWebApplication {
   fi
 
   if [[ "$WEB_MULTI" == "N" ]]; then
-    if [[ "$MAGE_INFRA" == "cloud" ]]; then
+    if [[ "$MAGE_INFRA" == "cloud" ]] || [[ "$MAGE_INFRA" == "" ]]; then
       git clone --quiet "$APPREPOSITORY" "$WEBAPP_DIR/$APPNAME/$HTTPD_DOCROOT_DIR" > /dev/null
     fi
   elif [[ "$WEB_MULTI" == "Y" ]]; then
