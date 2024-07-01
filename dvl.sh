@@ -92,10 +92,10 @@ function get_workspace_path() {
 }
 
 # Checker
-#if [[ ! -n "$DEVILBOX_PATH" ]]; then
-#  error "Devilbox not found, please make sure it is installed in your home directory or use DEVILBOX_PATH in your profile."
-#fi
-safe_cd "$(get_workspace_path)" "Devilbox not found, please make sure it is installed in your home directory or use DEVILBOX_PATH in your profile."
+if [[ -z "$DEVILBOX_PATH" ]]; then
+  error "Devilbox not found, please make sure it is installed in your home directory or use DEVILBOX_PATH in your profile."
+fi
+#safe_cd "$(get_workspace_path)" "Devilbox not found, please make sure it is installed in your home directory or use DEVILBOX_PATH in your profile."
 
 DVLBOX_PATH="$( cd "${DEVILBOX_PATH}" && pwd -P )"
 SCRIPT_PATH="$( cd "${DVLBOX_PATH}/.tests/scripts" && pwd -P )"
@@ -113,6 +113,8 @@ HTTPD_SERVER="$( "${SCRIPT_PATH}/env-getvar.sh" "HTTPD_SERVER" )"
 HTTPD_TEMPLATE_DIR="$( "${SCRIPT_PATH}/env-getvar.sh" "HTTPD_TEMPLATE_DIR" )"
 HTTPD_DOCROOT_DIR="$( "${SCRIPT_PATH}/env-getvar.sh" "HTTPD_DOCROOT_DIR" )"
 TLD_SUFFIX="$( "${SCRIPT_PATH}/env-getvar.sh" "TLD_SUFFIX" )"
+WEBAPP_DIR="$(get_workspace_path)/data/www"
+HTTPD_WORKDIR="/shared/httpd"
 WEBAPP_STACK=""
 MAGE_MODE=""
 MAGE_INFRA=""
@@ -125,10 +127,12 @@ APPDOMAINS=""
 APPDOMAINS_CRT=""
 PUBLICPATH="current"
 PHP_VERSION=""
-WEBAPP_DIR="$(get_workspace_path)/data/www"
+CURRENT_DIR="$(pwd)"
+PROJECT_DIR="${CURRENT_DIR/$WEBAPP_DIR\///}"
+TARGET_WORKDIR="$HTTPD_WORKDIR$PROJECT_DIR"
 
 # Read-only variables
-readonly VERSION="1.0.0"
+readonly VERSION="1.1.0"
 
 function main {
   if [[ $# -eq 0 ]] ; then
@@ -157,6 +161,14 @@ function main {
       exec)
         shift;
         ExecShell "$@"
+      ;;
+      magento)
+        shift;
+        MagentoCommand "$@"
+      ;;
+      composer)
+        shift;
+        ComposerCommand "$@"
       ;;
       shell)
         shift;
@@ -221,6 +233,14 @@ function OpenShell {
 
 function ExecShell() {
   BaseComposeCommand exec --user devilbox php bash -c "$@"
+}
+
+function MagentoCommand() {
+  BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "bin/magento $*"
+}
+
+function ComposerCommand() {
+  BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "composer $*"
 }
 
 function InitializeProject() {
@@ -503,6 +523,9 @@ function Usage {
       echo "${GREEN}" "init${NORMAL}             Initialize a new project using DevilBox."
       echo "${GREEN}" "shell${NORMAL}            Open shell (php version as args)"
       echo "${GREEN}" "exec${NORMAL}             Exec a command directly from shell (command executed on main PHP container)"
+      echo "${GREEN}" "magento${NORMAL}          Run Magento command from the current project directory"
+      echo "${GREEN}" "magerun${NORMAL}          Run Magerun2 command from the current project directory"
+      echo "${GREEN}" "composer${NORMAL}         Run Composer command from the current project directory"
     ;;
     --no-ansi)
       echo "DevilBox v${VERSION}"
@@ -531,6 +554,9 @@ function Usage {
       echo " init${NORMAL}             Initialize a new project using DevilBox."
       echo " shell${NORMAL}            Open shell (php version as args)"
       echo " exec${NORMAL}             Exec a command directly from shell (command executed on main PHP container)"
+      echo " magento${NORMAL}          Run Magento command from the current project directory"
+      echo " magerun${NORMAL}          Run Magerun2 command from the current project directory"
+      echo " composer${NORMAL}         Run Composer command from the current project directory"
     ;;
   esac
 }

@@ -1,0 +1,14 @@
+############################################################
+# Devilbox msmtprc: Postfix example
+############################################################
+
+
+# Set defaults.
+defaults
+
+# Set up a default account's settings.
+account default
+host postfix
+port 25
+
+from something@example.com
