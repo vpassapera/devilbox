@@ -19,4 +19,4 @@
 ; PHP.ini configuration
 ;
 [smtp]
-sendmail_path = '/usr/bin/msmtp -t'
+sendmail_path = '/usr/local/bin/msmtp -t'

@@ -6,6 +6,18 @@ Make sure to have a look at [UPDATING.md](https://github.com/cytopia/devilbox/bl
 ## Unreleased
 
 
+## Release v3.0.0-beta-0.6 (2024-06-01)
+
+### Added
+- New sub-command `magento` for `dvl.sh`
+- New sub-command `composer` for `dvl.sh`
+
+### Changed
+- Re-added and upgrade `mhsendmail` tool
+- Update PHP image version to `0.153`
+- Change default flavour for PHP image in order to use `mailhog`
+
+
 ## Release v3.0.0-beta-0.5 (2024-06-18)
 
 ### Added

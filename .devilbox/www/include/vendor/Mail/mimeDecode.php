@@ -234,7 +234,7 @@ class Mail_mimeDecode extends PEAR
                  PEAR::raiseError('header decode conversion requested, however iconv is missing');
             }
 
-            $structure = $this->_decode($this->_header, $this->_body);
+            $structure = $this->_decode($this->_header, $this->_body, 'text/html');
             if ($structure === false) {
                 $structure = $this->raiseError($this->_error);
             }

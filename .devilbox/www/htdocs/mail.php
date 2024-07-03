@@ -209,6 +209,7 @@ $messages = $MyMbox->get($sortOrderArr);
 								<tr id="mail-<?php echo $data['num'];?>" style="display:none">
 									<td></td>
 									<td colspan="5">
+                                        <iframe seamless="seamless" class="body-iframe" id="email-body-<?php echo $data['num'];?>" src="" frameborder="0" scrolling="no" height="100%" width="100%" style="width:100%; height:100%;margin:0px;border:0px;"></iframe>
 										<div class="email-body"></div>
 										<div class="alert alert-warning" role="alert" style="display:none">
 											No valid body found
@@ -239,6 +240,8 @@ $messages = $MyMbox->get($sortOrderArr);
 				row.toggle();
 
 				const bodyElement = row.find('.email-body')[0];
+				const iframeBodyElement = $(row.find('.body-iframe')[0]);
+                let iframeBodyUrl = '/_iframe_mail.php?mail-id=' + id;
 				if(bodyElement.shadowRoot !== null){
 					// We've already fetched the message content.
 					return;
@@ -258,7 +261,10 @@ $messages = $MyMbox->get($sortOrderArr);
 					else{
 						bodyElement.shadowRoot.innerHTML = body;
 					}
-				})
+				});
+
+                document.getElementById('email-body-' + id).src = iframeBodyUrl;
+                iframeBodyElement.on("load",function() { console.log($(this).attr("src"))})
 			})
 			// Handler for .ready() called.
 		});

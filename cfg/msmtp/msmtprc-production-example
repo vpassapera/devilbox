@@ -1,0 +1,24 @@
+############################################################
+# Devilbox msmtprc: Live - 3rd-party services example
+############################################################
+
+
+# Set defaults.
+defaults
+
+# Set up a default account's settings.
+account default
+
+# SMTP settings
+host smtp.example.com
+port 567
+auth on
+username username
+password apikey
+
+# SMTP TLS settings
+tls on
+tls_starttls on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+
+from something@example.com

@@ -8,7 +8,7 @@ services:
   # MailHog
   # -----------------------------------------------------------------------------------------------
   mailhog:
-    image: mailhog/mailhog:${MAILHOG_SERVER:-latest}
+    image: ${MAILHOG_IMAGE:-mailhog/mailhog}:${MAILHOG_SERVER:-latest}
     hostname: mailhog
     ports:
       - "${LOCAL_LISTEN_ADDR}${HOST_PORT_MAILHOG:-8025}:8025"
