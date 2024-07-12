@@ -174,6 +174,10 @@ function main {
         shift;
         OpenShell "$@"
       ;;
+      sync-httpd)
+        shift;
+        SyncHttpdConf "$@"
+      ;;
       --no-ansi)
         Usage --no-ansi
       ;;
@@ -494,6 +498,23 @@ function BootstrapWebApplication {
   echo ""
 }
 
+function SyncHttpdConf() {
+  echo -ne "${YELLOW}Please wait, we are syncing your Httpd configuration"
+
+  for appName in "$WEBAPP_DIR"/*; do
+    if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
+      \cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-magento2" "$appName/$HTTPD_TEMPLATE_DIR/nginx.yml"
+    elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
+      \cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-magento2" "$appName/$HTTPD_TEMPLATE_DIR/apache22.yml"
+    elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
+      \cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-magento2" "$appName/$HTTPD_TEMPLATE_DIR/apache24.yml"
+    fi
+  done
+
+  echo -ne "...${NORMAL} ${GREEN}DONE ✔${NORMAL}"
+  echo ""
+}
+
 function Usage {
   case "$1" in
     --ansi)
@@ -526,6 +547,7 @@ function Usage {
       echo "${GREEN}" "magento${NORMAL}          Run Magento command from the current project directory"
       echo "${GREEN}" "magerun${NORMAL}          Run Magerun2 command from the current project directory"
       echo "${GREEN}" "composer${NORMAL}         Run Composer command from the current project directory"
+      echo "${GREEN}" "sync-httpd${NORMAL}       Sync Httpd configuration to all current webapps"
     ;;
     --no-ansi)
       echo "DevilBox v${VERSION}"
@@ -557,6 +579,7 @@ function Usage {
       echo " magento${NORMAL}          Run Magento command from the current project directory"
       echo " magerun${NORMAL}          Run Magerun2 command from the current project directory"
       echo " composer${NORMAL}         Run Composer command from the current project directory"
+      echo " sync-httpd${NORMAL}       Sync Httpd configuration to all current webapps"
     ;;
   esac
 }
