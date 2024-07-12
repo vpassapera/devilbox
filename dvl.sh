@@ -245,7 +245,7 @@ function ComposerCommand() {
 
 function InitializeProject() {
   # Define the app name
-  while [[ $APPNAME =~ [^-a-z0-9] ]] || [[ $APPNAME == '' ]]
+  while [[ $APPNAME =~ [^-.a-z0-9] ]] || [[ $APPNAME == '' ]]
   do
     read -r -p "${CYAN}Please enter your webapp name (lowercase, alphanumeric):${NORMAL} " APPNAME
   done
@@ -316,7 +316,7 @@ function InitializeProject() {
       ;;
   esac
   if [[ "$WEB_MULTI" == "Y" ]]; then
-    while [[ $PARENT_APPNAME =~ [^-a-z0-9] ]] || [[ $PARENT_APPNAME == '' ]]
+    while [[ $PARENT_APPNAME =~ [^-.a-z0-9] ]] || [[ $PARENT_APPNAME == '' ]]
     do
       read -r -p "${CYAN}What is the main-entry webapp name?${NORMAL} " PARENT_APPNAME
     done
