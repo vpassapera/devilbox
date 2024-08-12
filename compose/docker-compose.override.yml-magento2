@@ -209,6 +209,43 @@ services:
       # - ${DEVILBOX_PATH}/autostart:/startup.2.d:rw${MOUNT_OPTIONS}
       - devilbox-mail:/var/mail:rw${MOUNT_OPTIONS}
 
+  # ------------------------------------------------------------
+  # MySQL Database
+  # ------------------------------------------------------------
+  mysql:
+    image: devilbox/mysql:${MYSQL_SERVER}-0.21
+    hostname: mysql
+    shm_size: 2gb
+
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+
+    ports:
+      # [local-machine:]local-port:docker-port
+      - "${LOCAL_LISTEN_ADDR}${HOST_PORT_MYSQL}:3306"
+
+    networks:
+      app_net:
+        ipv4_address: 172.16.238.12
+
+    volumes:
+      # ---- Format: ----
+      # HOST-DIRECTORY : DOCKER-DIRECTORY
+
+      # Mount devilbox user-defined cnf files in order
+      # to overwrite the MySQL server configuration
+      - ${DEVILBOX_PATH}/.devilbox/cfg/mysql.cnf:/etc/mysql/conf.d/devilbox.cnf:ro${MOUNT_OPTIONS}
+      - ${DEVILBOX_PATH}/cfg/${MYSQL_SERVER}:/etc/mysql/docker-default.d:ro${MOUNT_OPTIONS}
+
+      # Mount MySQL Data directory
+      - devilbox-${MYSQL_SERVER}:/var/lib/mysql:rw${MOUNT_OPTIONS}
+
+    depends_on:
+      - bind
+      - php
+      - httpd
+
   # -----------------------------------------------------------------------------------------------
   # Blackfire
   # -----------------------------------------------------------------------------------------------
@@ -336,6 +373,40 @@ services:
       - httpd
       - varnish
 
+  # ------------------------------------------------------------
+  # Redis
+  # ------------------------------------------------------------
+  redis:
+    image: redis:${REDIS_SERVER}
+    hostname: redis
+
+    # Apply custom arguments to redis startup
+    command: redis-server ${REDIS_ARGS:- }
+    environment:
+      - REDIS_ARGS=${REDIS_ARGS:- }
+
+    ports:
+      # [local-machine:]local-port:docker-port
+      - "${LOCAL_LISTEN_ADDR}${HOST_PORT_REDIS}:6379"
+
+    sysctls:
+      net.core.somaxconn: 1024
+
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 4000
+
+    networks:
+      app_net:
+        ipv4_address: 172.16.238.14
+
+    depends_on:
+      - bind
+      - php
+      - httpd
+
   # -----------------------------------------------------------------------------------------------
   # ELK Stack
   # -----------------------------------------------------------------------------------------------
@@ -347,6 +418,10 @@ services:
     networks:
       app_net:
         ipv4_address: 172.16.238.240
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     environment:
       - TZ=${TIMEZONE:-UTC}
       - discovery.type=single-node
@@ -357,6 +432,30 @@ services:
       - ./entrypoint.d/elasticsearch-plugins.sh:/usr/share/elasticsearch/elasticsearch-plugins.sh:z
     entrypoint:  ["sh", "/usr/share/elasticsearch/elasticsearch-plugins.sh"]
 
+  # -----------------------------------------------------------------------------------------------
+  # OpenSearch
+  # -----------------------------------------------------------------------------------------------
+  opensearch:
+    image: magento/magento-cloud-docker-opensearch:${OPENSEARCH_SERVER:-latest}
+    hostname: opensearch
+    ports:
+      - "${LOCAL_LISTEN_ADDR}${HOST_PORT_ELK_ELASTIC:-9200}:9200"
+    networks:
+      app_net:
+        ipv4_address: 172.16.238.243
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    environment:
+      - TZ=${TIMEZONE:-UTC}
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+      - discovery.seed_hosts=opensearch
+      - bootstrap.memory_lock=true
+      - DISABLE_SECURITY_PLUGIN=true
+    volumes:
+      - devilbox-opensearch:/usr/share/opensearch/data
 
 ###
 ### Volumes
@@ -364,3 +463,4 @@ services:
 volumes:
   devilbox-rabbit:
   devilbox-elastic:
+  devilbox-opensearch:

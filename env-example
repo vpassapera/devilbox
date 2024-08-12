@@ -490,6 +490,21 @@ MAILHOG_SERVER=latest
 
 
 
+###
+### 1.12 Choose OpenSearch server image
+###
+### See here for all versions: https://hub.docker.com/r/magento/magento-cloud-docker-opensearch/tags
+###
+OPENSEARCH_SERVER=1.2-1.3.7
+#OPENSEARCH_SERVER=1.3-1.3.7
+#OPENSEARCH_SERVER=1.1-1.3.7
+#OPENSEARCH_SERVER=1-1.3.7
+#OPENSEARCH_SERVER=2-1.3.7
+#OPENSEARCH_SERVER=2.12-1.3.7
+#OPENSEARCH_SERVER=2.5-1.3.7
+
+
+
 ################################################################################
 ###
 ### 2. Host Mounts (Your computer)
@@ -574,7 +589,7 @@ PHP_MODULES_ENABLE=
 ###
 ### PHP_MODULES_DISABLE=xdebug,imagick,swoole
 ###
-PHP_MODULES_DISABLE=oci8,PDO_OCI,pdo_sqlsrv,sqlsrv,rdkafka,swoole,psr,phalcon
+PHP_MODULES_DISABLE=oci8,PDO_OCI,PDO_Firebird,pdo_dblib,pdo_sqlite,pdo_sqlsrv,sqlsrv,rdkafka,swoole,psr,phalcon,amqp,apcu,FFI,ldap,lz4,lzf,memcache,memcached,mongodb,OAuth,snmp,solr,sqlite3,uploadprogress,uuid,vips,xlswriter,yaml,zstd
 
 
 ###

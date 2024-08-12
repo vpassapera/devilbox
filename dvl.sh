@@ -195,7 +195,7 @@ function __get_default_containers() {
   if [[ ! -z "$DEVILBOX_CONTAINERS" ]]; then
     printf %s "${DEVILBOX_CONTAINERS}"
   else
-    printf %s "bind httpd php php74 php81 php82 mysql redis elastic mailhog"
+    printf %s "bind httpd php php74 php81 php82 php83 mysql redis elastic mailhog"
   fi
 }
 
@@ -240,7 +240,7 @@ function ExecShell() {
 }
 
 function MagentoCommand() {
-  BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "bin/magento $*"
+  BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "php -dmemory_limit=-1 bin/magento $*"
 }
 
 function ComposerCommand() {
@@ -425,7 +425,7 @@ function BootstrapWebApplication {
   mkdir -p "$devilboxConfDir"
 
   # General Configuration
-  if [[ -f "$DEVILBOX_PATH/cfg/vhost-gen/backend.cfg-example-php-multi" ]]; then
+  if [[ -f "$DEVILBOX_PATH/cfg/vhost-gen/backend.cfg-example-php-multi" ]] && [[ $currentStack != "magento" ]]; then
     cat "$DEVILBOX_PATH/cfg/vhost-gen/backend.cfg-example-php-multi" | sed "s/PHP_VERSION/$PHP_VERSION/g" > "$devilboxConfDir/backend.cfg"
   fi
 
