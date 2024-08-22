@@ -217,6 +217,11 @@ services:
     hostname: mysql
     shm_size: 2gb
 
+    command:
+      --max_allowed_packet=64M
+      --optimizer_use_condition_selectivity=1
+      --optimizer_switch="rowid_filter=off"
+
     environment:
       - MYSQL_ROOT_PASSWORD
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
@@ -392,11 +397,11 @@ services:
     sysctls:
       net.core.somaxconn: 1024
 
-    ulimits:
-      nproc: 65535
-      nofile:
-        soft: 20000
-        hard: 4000
+#    ulimits:
+#      nproc: 65535
+#      nofile:
+#        soft: 20000
+#        hard: 4000
 
     networks:
       app_net:
@@ -436,7 +441,7 @@ services:
   # OpenSearch
   # -----------------------------------------------------------------------------------------------
   opensearch:
-    image: magento/magento-cloud-docker-opensearch:${OPENSEARCH_SERVER:-latest}
+    image: magento/magento-cloud-docker-opensearch:${OPENSEARCH_SERVER:-1.2-1.3.7}
     hostname: opensearch
     ports:
       - "${LOCAL_LISTEN_ADDR}${HOST_PORT_ELK_ELASTIC:-9200}:9200"
