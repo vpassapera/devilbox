@@ -91,6 +91,42 @@ function get_workspace_path() {
   fi
 }
 
+function get_yq_version() {
+  printf %s "$( \
+    curl -sS 'https://github.com/mikefarah/yq/releases' \
+    | grep -Eo '/mikefarah/yq/releases/tag/v?[.0-9]+"' \
+    | grep -Eo 'v?[.0-9]+' \
+    | sort -V \
+    | tail -1 \
+  )"
+}
+
+function download_yq() {
+  local uname
+  local aarch
+  local DEB_HOST_ARCH
+
+  uname="$(uname)"
+  aarch="$(uname -m)"
+
+  if [ "${uname}" = "Linux" ]; then
+    DEB_HOST_ARCH="$( dpkg-architecture --query DEB_HOST_ARCH )"
+  elif [ "${uname}" = "Darwin" ]; then
+    DEB_HOST_ARCH="$aarch"
+    if [ "${aarch}" = "i386" ] || [ "$aarch" = "x86_64" ]; then
+      DEB_HOST_ARCH="amd64"
+    fi
+  fi
+
+  if [ "${DEB_HOST_ARCH}" = "amd64" ] || [ "${DEB_HOST_ARCH}" = "arm64" ]; then
+    YQ_UNAME=$(echo "$uname" | tr '[:upper:]' '[:lower:]')
+    YQ_URL="https://github.com/mikefarah/yq/releases/download/$(get_yq_version)/yq_${YQ_UNAME}_${DEB_HOST_ARCH}" \
+    && curl -sS -L --fail "${YQ_URL}" > "$DEVILBOX_PATH/binaries/yq"
+  fi
+
+  chmod +x "$DEVILBOX_PATH/binaries/yq";
+}
+
 # Checker
 if [[ -z "$DEVILBOX_PATH" ]]; then
   error "Devilbox not found, please make sure it is installed in your home directory or use DEVILBOX_PATH in your profile."
@@ -101,6 +137,11 @@ DVLBOX_PATH="$( cd "${DEVILBOX_PATH}" && pwd -P )"
 SCRIPT_PATH="$( cd "${DVLBOX_PATH}/.tests/scripts" && pwd -P )"
 # shellcheck disable=SC1090
 source "${SCRIPT_PATH}/.lib.sh"
+
+# Check and download yq binary
+if [[ ! -f "$DEVILBOX_PATH/binaries/yq" ]]; then
+  download_yq
+fi
 
 # -------------------------------------------------------------------------------------------------
 # ENTRYPOINT
@@ -127,9 +168,11 @@ APPDOMAINS=""
 APPDOMAINS_CRT=""
 PUBLICPATH="current"
 PHP_VERSION=""
+PROXY_PORT="3000"
 CURRENT_DIR="$(pwd)"
 PROJECT_DIR="${CURRENT_DIR/$WEBAPP_DIR\///}"
 TARGET_WORKDIR="$HTTPD_WORKDIR$PROJECT_DIR"
+YQ_BINARY="$DEVILBOX_PATH/binaries/yq"
 
 # Read-only variables
 readonly VERSION="1.1.0"
@@ -137,6 +180,9 @@ readonly VERSION="1.1.0"
 function main {
   if [[ $# -eq 0 ]] ; then
       Usage --ansi
+      echo "${BOLD}"
+      $YQ_BINARY --version
+      echo "${NORMAL}"
   else
     case "$1" in
       up|start)
@@ -165,6 +211,10 @@ function main {
       magento)
         shift;
         MagentoCommand "$@"
+      ;;
+      magerun)
+        shift;
+        MagerunCommand "$@"
       ;;
       composer)
         shift;
@@ -241,6 +291,10 @@ function ExecShell() {
 
 function MagentoCommand() {
   BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "php -dmemory_limit=-1 bin/magento $*"
+}
+
+function MagerunCommand() {
+  BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "php -dmemory_limit=-1 magerun $*"
 }
 
 function ComposerCommand() {
@@ -397,6 +451,16 @@ function InitializeProject() {
   echo -ne "...${NORMAL} ${GREEN}DONE${NORMAL}"
   echo ""
 
+  if [[ "$WEBAPP_STACK" != "magento" ]] && [[ "$WEBAPP_STACK" != "phpweb" ]] && [[ "$WEBAPP_STACK" != "laravel" ]]; then
+    # Define port proxy
+    read -r -p "${CYAN}Please choose port proxy of your webapp? [3000]${NORMAL} " response
+    PROXY_PORT=$response
+
+    echo -ne "${YELLOW}Proxy port of webapp set to $PROXY_PORT"
+    echo -ne "...${NORMAL} ${GREEN}DONE${NORMAL}"
+    echo ""
+  fi
+
   BootstrapWebApplication "$WEBAPP_STACK"
 }
 
@@ -425,8 +489,12 @@ function BootstrapWebApplication {
   mkdir -p "$devilboxConfDir"
 
   # General Configuration
-  if [[ -f "$DEVILBOX_PATH/cfg/vhost-gen/backend.cfg-example-php-multi" ]] && [[ $currentStack != "magento" ]]; then
+  if [[ -f "$DEVILBOX_PATH/cfg/vhost-gen/backend.cfg-example-php-multi" ]] && [[ $currentStack != "nodejs" ]] && [[ $currentStack != "bigcommerce" ]] && [[ $currentStack != "shopify" ]]; then
     cat "$DEVILBOX_PATH/cfg/vhost-gen/backend.cfg-example-php-multi" | sed "s/PHP_VERSION/$PHP_VERSION/g" > "$devilboxConfDir/backend.cfg"
+  fi
+
+  if [[ -f "$DEVILBOX_PATH/cfg/vhost-gen/backend.cfg-example-rproxy-multi" ]] && [[ $currentStack != "magento" ]] && [[ $currentStack != "laravel" ]] && [[ $currentStack != "phpweb" ]]; then
+    cat "$DEVILBOX_PATH/cfg/vhost-gen/backend.cfg-example-rproxy-multi" | sed "s/PHP_VERSION/$PHP_VERSION/g" | sed "s/PROXY_PORT/$PROXY_PORT/g" > "$devilboxConfDir/backend.cfg"
   fi
 
   if [[ "$WEB_MULTI" == "N" ]]; then
@@ -456,15 +524,6 @@ function BootstrapWebApplication {
         cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-rproxy" "$devilboxConfDir/apache24.yml"
       fi
       ;;
-    laravel)
-      if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-laravel" "$devilboxConfDir/nginx.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-laravel" "$devilboxConfDir/apache22.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-laravel" "$devilboxConfDir/apache24.yml"
-      fi
-      ;;
     shopify)
       if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
         cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-rproxy" "$devilboxConfDir/nginx.yml"
@@ -481,6 +540,15 @@ function BootstrapWebApplication {
         cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-rproxy" "$devilboxConfDir/apache22.yml"
       elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
         cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-rproxy" "$devilboxConfDir/apache24.yml"
+      fi
+      ;;
+    laravel)
+      if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-laravel" "$devilboxConfDir/nginx.yml"
+      elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-laravel" "$devilboxConfDir/apache22.yml"
+      elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
+        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-laravel" "$devilboxConfDir/apache24.yml"
       fi
       ;;
     phpweb|*)

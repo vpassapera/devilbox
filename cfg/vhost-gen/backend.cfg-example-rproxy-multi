@@ -1,1 +1,1 @@
-conf:rproxy:tcp:PHP_VERSION:PROXY_PORT
+conf:rproxy:http:PHP_VERSION:PROXY_PORT
