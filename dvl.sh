@@ -172,6 +172,7 @@ PROXY_PORT="3000"
 CURRENT_DIR="$(pwd)"
 PROJECT_DIR="${CURRENT_DIR/$WEBAPP_DIR\///}"
 TARGET_WORKDIR="$HTTPD_WORKDIR$PROJECT_DIR"
+CONFIG_FILE=".devilbox.yaml"
 YQ_BINARY="$DEVILBOX_PATH/binaries/yq"
 
 # Read-only variables
@@ -406,13 +407,13 @@ function InitializeProject() {
     case "$response" in
       aws)
         MAGE_INFRA="aws"
-        echo -ne "${YELLOW}Your Magento application mode has been set to ${MAGE_MODE}"
+        echo -ne "${YELLOW}Your infrastructure type has been set to ${MAGE_MODE}"
         echo -ne "...${NORMAL} ${GREEN}DONE${NORMAL}"
         echo ""
         ;;
       cloud|*)
         MAGE_INFRA="cloud"
-        echo -ne "${YELLOW}Your Magento application mode has been set to ${MAGE_MODE}"
+        echo -ne "${YELLOW}Your infrastructure type has been set to ${MAGE_MODE}"
         echo -ne "...${NORMAL} ${GREEN}DONE${NORMAL}"
         echo ""
         ;;
@@ -464,7 +465,19 @@ function InitializeProject() {
   BootstrapWebApplication "$WEBAPP_STACK"
 }
 
-function BootstrapWebApplication {
+function GenerateYamlConf() {
+  local php_version
+  local proxy_port
+  local current_stack
+  local infra_type
+  local repo_url
+  local is_subdomain
+  local app_name
+
+  local filePath="$WEBAPP_DIR/$APPNAME/$CONFIG_FILE"
+}
+
+function BootstrapWebApplication() {
   # Start configuring everything
   echo -ne "${YELLOW}Please wait, we are configuring your web application"
   local devilboxConfDir="$WEBAPP_DIR/$APPNAME/$HTTPD_TEMPLATE_DIR"
