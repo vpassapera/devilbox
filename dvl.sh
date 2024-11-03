@@ -407,13 +407,13 @@ function InitializeProject() {
     case "$response" in
       aws)
         MAGE_INFRA="aws"
-        echo -ne "${YELLOW}Your infrastructure type has been set to ${MAGE_MODE}"
+        echo -ne "${YELLOW}Your infrastructure type has been set to ${MAGE_INFRA}"
         echo -ne "...${NORMAL} ${GREEN}DONE${NORMAL}"
         echo ""
         ;;
       cloud|*)
         MAGE_INFRA="cloud"
-        echo -ne "${YELLOW}Your infrastructure type has been set to ${MAGE_MODE}"
+        echo -ne "${YELLOW}Your infrastructure type has been set to ${MAGE_INFRA}"
         echo -ne "...${NORMAL} ${GREEN}DONE${NORMAL}"
         echo ""
         ;;
