@@ -124,6 +124,9 @@ function download_yq() {
 
   if [ "${DEB_HOST_ARCH}" = "amd64" ] || [ "${DEB_HOST_ARCH}" = "arm64" ]; then
     YQ_UNAME=$(echo "$uname" | tr '[:upper:]' '[:lower:]')
+    if [[ ! -d "$DEVILBOX_PATH/.tests/binaries/" ]]; then
+      mkdir -p "$DEVILBOX_PATH/.tests/binaries/"
+    fi
     YQ_URL="https://github.com/mikefarah/yq/releases/download/$(get_yq_version)/yq_${YQ_UNAME}_${DEB_HOST_ARCH}" \
     && curl -sS -L --fail "${YQ_URL}" > "$DEVILBOX_PATH/.tests/binaries/yq"
   fi
