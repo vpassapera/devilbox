@@ -110,7 +110,11 @@ function download_yq() {
   aarch="$(uname -m)"
 
   if [ "${uname}" = "Linux" ]; then
-    DEB_HOST_ARCH="$( dpkg-architecture --query DEB_HOST_ARCH )"
+    if ! command -v dpkg-architecture 2>&1 >/dev/null; then
+      DEB_HOST_ARCH="$aarch"
+    else
+      DEB_HOST_ARCH="$( dpkg-architecture --query DEB_HOST_ARCH )"
+    fi
   elif [ "${uname}" = "Darwin" ]; then
     DEB_HOST_ARCH="$aarch"
     if [ "${aarch}" = "i386" ] || [ "$aarch" = "x86_64" ]; then
