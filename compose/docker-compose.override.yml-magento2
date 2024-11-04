@@ -106,7 +106,7 @@ services:
 
   php74:
     <<: *default-php
-    image: devilboxcommunity/php-fpm:7.4-slim-0.153
+    image: devilboxcommunity/php-fpm:7.4-slim-0.154
     hostname: php74
     networks:
       app_net:
@@ -127,7 +127,7 @@ services:
 
   php80:
     <<: *default-php
-    image: devilboxcommunity/php-fpm:8.0-slim-0.153
+    image: devilboxcommunity/php-fpm:8.0-slim-0.154
     hostname: php80
     networks:
       app_net:
@@ -148,7 +148,7 @@ services:
 
   php81:
     <<: *default-php
-    image: devilboxcommunity/php-fpm:8.1-slim-0.153
+    image: devilboxcommunity/php-fpm:8.1-slim-0.154
     hostname: php81
     networks:
       app_net:
@@ -169,7 +169,7 @@ services:
 
   php82:
     <<: *default-php
-    image: devilboxcommunity/php-fpm:8.2-slim-0.153
+    image: devilboxcommunity/php-fpm:8.2-slim-0.154
     hostname: php82
     networks:
       app_net:
@@ -190,7 +190,7 @@ services:
 
   php83:
     <<: *default-php
-    image: devilboxcommunity/php-fpm:8.3-slim-0.153
+    image: devilboxcommunity/php-fpm:8.3-slim-0.154
     hostname: php83
     networks:
       app_net:
