@@ -46,16 +46,8 @@ vhost: |
       access_log   "__ACCESS_LOG__" combined;
       error_log    "__ERROR_LOG__" warn;
 
-      # Reverse Proxy definition (Ensure to adjust the port, currently '8000')
-      location / {
-        # https://stackoverflow.com/a/72586833
-        proxy_set_header Host            $host;
-        proxy_set_header X-Real-IP       $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        # Proxy connection
-        proxy_pass __PROXY_PROTO__://__PROXY_ADDR__:__PROXY_PORT__;
-      }
-
+  __VHOST_DOCROOT__
+  __VHOST_RPROXY__
   __REDIRECT__
   __SSL__
   __ALIASES__
@@ -69,8 +61,38 @@ vhost: |
 ### vHost Type (normal or reverse proxy)
 ###
 vhost_type:
-  docroot: ""
-  rproxy: ""
+  docroot: |
+    # Define the vhost to serve files
+    root         "__DOCUMENT_ROOT__";
+    index        __INDEX__;
+
+  # Reverse Proxy (-r http(s)://ADDR:PORT)
+  rproxy: |
+    # Define Reverse Proxy
+    location / {
+        # https://stackoverflow.com/a/72586833
+        proxy_set_header Host            $host;
+        proxy_set_header X-Real-IP       $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # Proxy connection
+        proxy_pass __PROXY_PROTO__://__PROXY_ADDR__:__PROXY_PORT__;
+    }
+
+  # Reverse Proxy with websocket support (-r ws(s)://ADDR:PORT)
+  rproxy_ws: |
+    # Define Reverse Proxy with Websock support
+    location __LOCATION__ {
+        # https://stackoverflow.com/a/72586833
+        proxy_set_header Host            $host;
+        proxy_set_header X-Real-IP       $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # Websocket settings
+        proxy_http_version          1.1;
+        proxy_set_header Upgrade    $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        # Proxy connection
+        proxy_pass __PROXY_PROTO__://__PROXY_ADDR__:__PROXY_PORT__;
+    }
 
 ###
 ### Optional features to be enabled in vHost
