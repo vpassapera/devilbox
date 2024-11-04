@@ -117,9 +117,10 @@ function download_yq() {
     fi
   elif [ "${uname}" = "Darwin" ]; then
     DEB_HOST_ARCH="$aarch"
-    if [ "${aarch}" = "i386" ] || [ "$aarch" = "x86_64" ]; then
-      DEB_HOST_ARCH="amd64"
-    fi
+  fi
+
+  if [ "${aarch}" = "i386" ] || [ "$aarch" = "x86_64" ]; then
+    DEB_HOST_ARCH="amd64"
   fi
 
   if [ "${DEB_HOST_ARCH}" = "amd64" ] || [ "${DEB_HOST_ARCH}" = "arm64" ]; then
