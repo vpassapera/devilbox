@@ -1,0 +1,16 @@
+---
+# .devilbox.yaml
+#
+#:-version: v1
+ 
+apps:
+  ${app_name}:
+    domain: ${domain}
+    is_subdomain: ${is_subdomain}
+stack: ${current_stack}
+infra: ${infra_type}
+repo: ${repo_url}
+php:
+  version: ${php_version}
+proxy:
+  port: ${proxy_port}
