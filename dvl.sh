@@ -184,6 +184,7 @@ CURRENT_DIR="$(pwd)"
 PROJECT_DIR="${CURRENT_DIR/$WEBAPP_DIR\///}"
 TARGET_WORKDIR="$HTTPD_WORKDIR$PROJECT_DIR"
 CONFIG_FILE=".devilbox.yaml"
+TEMPLATE_CONFIG="$DEVILBOX_PATH/.tests/devilbox-template-config.yaml"
 YQ_BINARY="$DEVILBOX_PATH/.tests/binaries/yq"
 
 # Read-only variables
@@ -531,6 +532,7 @@ function GenerateYamlConf {
   local filePath="$WEBAPP_DIR/$APPNAME/$CONFIG_FILE"
 
   if [[ ! -f "$filePath" ]]; then
+    \cp "$TEMPLATE_CONFIG" "$filePath"
     current_stack="$1" \
     app_name="$2" \
     domain="$3"
@@ -539,10 +541,7 @@ function GenerateYamlConf {
     repo_url="$6" \
     php_version="$7" \
     proxy_port="$8" \
-    UpdateConfig '".apps.${app_name}.domain = ${domain} |
-      .apps.${app_name}.is_subdomain = ${is_subdomain} |
-      .stack = strenv(current_stack) |
-      .infra = strenv()" | envsubst'
+    UpdateConfig '.[] |= envsubst' "$filePath"
   fi
 }
 
