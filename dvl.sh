@@ -162,8 +162,11 @@ HTTPD_SERVER="$( "${SCRIPT_PATH}/env-getvar.sh" "HTTPD_SERVER" )"
 HTTPD_TEMPLATE_DIR="$( "${SCRIPT_PATH}/env-getvar.sh" "HTTPD_TEMPLATE_DIR" )"
 HTTPD_DOCROOT_DIR="$( "${SCRIPT_PATH}/env-getvar.sh" "HTTPD_DOCROOT_DIR" )"
 TLD_SUFFIX="$( "${SCRIPT_PATH}/env-getvar.sh" "TLD_SUFFIX" )"
+MYSQL_ROOT_PASSWORD="$( "${SCRIPT_PATH}/env-getvar.sh" "MYSQL_ROOT_PASSWORD" )"
 WEBAPP_DIR="$(get_workspace_path)/data/www"
 HTTPD_WORKDIR="/shared/httpd"
+BACKUP_WORKDIR="/shared/backups"
+AWS_BASEDIR="src"
 WEBAPP_STACK=""
 MAGE_MODE=""
 MAGE_INFRA=""
@@ -217,6 +220,10 @@ function main {
         shift;
         ExecShell "$@"
       ;;
+      db:import|db-import)
+        shift;
+        DatabaseImport "$@"
+      ;;
       magento)
         shift;
         MagentoCommand "$@"
@@ -250,7 +257,7 @@ function main {
   fi
 }
 
-function __get_default_containers() {
+function __get_default_containers {
   if [[ ! -z "$DEVILBOX_CONTAINERS" ]]; then
     printf %s "${DEVILBOX_CONTAINERS}"
   else
@@ -294,23 +301,51 @@ function OpenShell {
   fi
 }
 
-function ExecShell() {
+function ExecShell {
   BaseComposeCommand exec --user devilbox php bash -c "$@"
 }
 
-function MagentoCommand() {
+function ExecShellTTY {
+  BaseComposeCommand exec --no-TTY --user devilbox php bash -c "$@"
+}
+
+function MagentoCommand {
   BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "php -dmemory_limit=-1 bin/magento $*"
 }
 
-function MagerunCommand() {
+function MagerunCommand {
   BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "php -dmemory_limit=-1 magerun $*"
 }
 
-function ComposerCommand() {
+function ComposerCommand {
   BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "composer $*"
 }
 
-function InitializeProject() {
+function DatabaseImport {
+  if [[ "$#" -lt 2 ]]; then
+    info "Ensure your backup file exists in ./backups directory on host machine."
+    error "Missing required argumenst filename /or database name. E.g dvl db:import <filename> <database_name>"
+  fi
+
+  local filename="$1"
+  local dbname="$2"
+
+  if [[ "$filename" == *.sql ]]; then
+    echo -ne "${YELLOW}${BOLD}[!] Importing $filename into $dbname..."
+    (ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' $dbname < $BACKUP_WORKDIR/$filename") &
+    spinner
+    echo -ne "${NORMAL}"
+  elif [[ "$filename" == *.sql.gz ]]; then
+    echo -ne "${YELLOW}${BOLD}[!] Extracting $filename and importing it into $dbname..."
+    (ExecShellTTY "zcat $BACKUP_WORKDIR/$filename | mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' $dbname") &
+    spinner
+    echo -ne "${NORMAL}"
+  else
+    error "File type (name: ${filename}) does not supported yet."
+  fi
+}
+
+function InitializeProject {
   # Define the app name
   while [[ $APPNAME =~ [^-.a-z0-9] ]] || [[ $APPNAME == '' ]]
   do
@@ -473,19 +508,45 @@ function InitializeProject() {
   BootstrapWebApplication "$WEBAPP_STACK"
 }
 
-function GenerateYamlConf() {
-  local php_version
-  local proxy_port
-  local current_stack
-  local infra_type
-  local repo_url
-  local is_subdomain
-  local app_name
-
+function UpdateConfig {
   local filePath="$WEBAPP_DIR/$APPNAME/$CONFIG_FILE"
+  local nullInput=""
+
+  if [[ ! -f "$filePath" ]]; then
+    nullInput=" --null-input"
+  fi
+
+  $YQ_BINARY"$nullInput" "$@"
 }
 
-function BootstrapWebApplication() {
+function GenerateYamlConf {
+  current_stack="$1"
+  app_name="$2"
+  is_subdomain="$3"
+  infra_type="$4"
+  repo_url="$5"
+  php_version="$6"
+  proxy_port="$7"
+
+  local filePath="$WEBAPP_DIR/$APPNAME/$CONFIG_FILE"
+
+  if [[ ! -f "$filePath" ]]; then
+    current_stack="$1" \
+    app_name="$2" \
+    domain="$3"
+    is_subdomain="$4" \
+    infra_type="$5" \
+    repo_url="$6" \
+    php_version="$7" \
+    proxy_port="$8" \
+    UpdateConfig '".apps.${app_name}.domain = ${domain} |
+      .apps.${app_name}.is_subdomain = ${is_subdomain} |
+      .stack = strenv(current_stack) |
+      .infra = strenv()" | envsubst'
+  fi
+}
+
+function BootstrapWebApplication {
   # Start configuring everything
   echo -ne "${YELLOW}Please wait, we are configuring your web application"
   local devilboxConfDir="$WEBAPP_DIR/$APPNAME/$HTTPD_TEMPLATE_DIR"
@@ -504,7 +565,7 @@ function BootstrapWebApplication() {
 
   if [[ "$WEB_MULTI" == "N" ]] && [[ "$MAGE_INFRA" == "aws" ]]; then
     git clone --quiet "$APPREPOSITORY" "$WEBAPP_DIR/$APPNAME" > /dev/null
-    (cd "$WEBAPP_DIR/$APPNAME" || exit; ln -snf "src" "$HTTPD_DOCROOT_DIR" > /dev/null)
+    (cd "$WEBAPP_DIR/$APPNAME" || exit; ln -snf "$AWS_BASEDIR" "$HTTPD_DOCROOT_DIR" > /dev/null)
   fi
 
   mkdir -p "$WEBAPP_DIR/$APPNAME"
@@ -588,7 +649,7 @@ function BootstrapWebApplication() {
   echo ""
 }
 
-function SyncHttpdConf() {
+function SyncHttpdConf {
   echo -ne "${YELLOW}Please wait, we are syncing your Httpd configuration"
 
   for appName in "$WEBAPP_DIR"/*; do
