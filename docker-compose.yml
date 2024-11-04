@@ -91,9 +91,9 @@ services:
 
     # MacOS and Windows have this by default, this hack also allows it for Linux
     extra_hosts:
-      docker.for.lin.host.internal: 172.16.238.1
-      docker.for.lin.localhost: 172.16.238.1
-      host.docker.internal: host-gateway
+      - "docker.for.lin.host.internal:172.16.238.1"
+      - "docker.for.lin.localhost:172.16.238.1"
+      - "host.docker.internal:host-gateway"
 
     networks:
       app_net:
@@ -178,9 +178,9 @@ services:
 
     # MacOS and Windows have this by default, this hack also allows it for Linux
     extra_hosts:
-      docker.for.lin.host.internal: 172.16.238.1
-      docker.for.lin.localhost: 172.16.238.1
-      host.docker.internal: host-gateway
+      - "docker.for.lin.host.internal:172.16.238.1"
+      - "docker.for.lin.localhost:172.16.238.1"
+      - "host.docker.internal:host-gateway"
 
     networks:
       app_net:
