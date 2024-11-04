@@ -504,7 +504,7 @@ function BootstrapWebApplication() {
 
   if [[ "$WEB_MULTI" == "N" ]] && [[ "$MAGE_INFRA" == "aws" ]]; then
     git clone --quiet "$APPREPOSITORY" "$WEBAPP_DIR/$APPNAME" > /dev/null
-    (cd "$WEBAPP_DIR" || exit; ln -snf "src" "$HTTPD_DOCROOT_DIR" > /dev/null)
+    (cd "$WEBAPP_DIR/$APPNAME" || exit; ln -snf "src" "$HTTPD_DOCROOT_DIR" > /dev/null)
   fi
 
   mkdir -p "$WEBAPP_DIR/$APPNAME"
