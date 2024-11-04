@@ -121,10 +121,10 @@ function download_yq() {
   if [ "${DEB_HOST_ARCH}" = "amd64" ] || [ "${DEB_HOST_ARCH}" = "arm64" ]; then
     YQ_UNAME=$(echo "$uname" | tr '[:upper:]' '[:lower:]')
     YQ_URL="https://github.com/mikefarah/yq/releases/download/$(get_yq_version)/yq_${YQ_UNAME}_${DEB_HOST_ARCH}" \
-    && curl -sS -L --fail "${YQ_URL}" > "$DEVILBOX_PATH/binaries/yq"
+    && curl -sS -L --fail "${YQ_URL}" > "$DEVILBOX_PATH/.tests/binaries/yq"
   fi
 
-  chmod +x "$DEVILBOX_PATH/binaries/yq";
+  chmod +x "$DEVILBOX_PATH/.tests/binaries/yq";
 }
 
 # Checker
@@ -139,7 +139,7 @@ SCRIPT_PATH="$( cd "${DVLBOX_PATH}/.tests/scripts" && pwd -P )"
 source "${SCRIPT_PATH}/.lib.sh"
 
 # Check and download yq binary
-if [[ ! -f "$DEVILBOX_PATH/binaries/yq" ]]; then
+if [[ ! -f "$DEVILBOX_PATH/.tests/binaries/yq" ]]; then
   download_yq
 fi
 
@@ -173,7 +173,7 @@ CURRENT_DIR="$(pwd)"
 PROJECT_DIR="${CURRENT_DIR/$WEBAPP_DIR\///}"
 TARGET_WORKDIR="$HTTPD_WORKDIR$PROJECT_DIR"
 CONFIG_FILE=".devilbox.yaml"
-YQ_BINARY="$DEVILBOX_PATH/binaries/yq"
+YQ_BINARY="$DEVILBOX_PATH/.tests/binaries/yq"
 
 # Read-only variables
 readonly VERSION="1.1.0"

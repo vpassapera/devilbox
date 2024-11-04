@@ -167,8 +167,8 @@
 !/.tests/www/rproxy/js/index.js
 
 # Ignore binaries dir
-/binaries/*
-!/binaries/.keepme
+/.tests/binaries/*
+!/.tests/binaries/.keepme
 
 # Keep folders
 !.keepme
