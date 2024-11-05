@@ -638,8 +638,14 @@ function BootstrapWebApplication {
 }
 
 function CreateYamlConf {
-  if [[ ! -f "$CURRENT_DIR/$CONFIG_FILE" ]]; then
-    error "Missing file $CONFIG_FILE in current directory!"
+  if [[ -f "$CURRENT_DIR/$CONFIG_FILE" ]]; then
+    error "File $CONFIG_FILE already exists in current directory!"
+  fi
+
+  local checkForGitDir
+  checkForGitDir=$(find "$CURRENT_DIR" -maxdepth 1 -type d -name '*.git*' -print -quit)
+  if [[ -z "$checkForGitDir" ]]; then
+    error "Please ensure you are on root of project directory (where exists .git directory)"
   fi
 
   InteractiveQuestions
@@ -674,6 +680,12 @@ function UpdateDocRoots {
           echo ""
         fi
       fi
+
+# TODO: Update content of symbolic links - planned for 1.2.2
+#      if [[ -L "$fileOrDir" ]]; then
+#        echo $fileOrDir
+#        echo "$(readlink "$fileOrDir")"
+#      fi
     done
   done
 }
