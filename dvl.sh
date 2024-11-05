@@ -213,6 +213,9 @@ function main {
       reset)
         ResetServices "$@"
       ;;
+      doctor)
+        DoctorForBox "$@"
+      ;;
       init)
         shift;
         InitializeProject "$@"
@@ -707,6 +710,10 @@ function SyncHttpdConf {
   echo ""
 }
 
+function DoctorForBox {
+  /bin/bash "$DEVILBOX_PATH/check-config.sh"
+}
+
 function Usage {
   case "$1" in
     --ansi)
@@ -732,6 +739,7 @@ function Usage {
       echo "${GREEN}" "up${NORMAL}(start)        Start designated devilbox services."
       echo "${GREEN}" "down${NORMAL}(stop)       Stop all Devilbox services."
       echo "${GREEN}" "restart${NORMAL}          Restart Devilbox service(s). Leave empty to restart all."
+      echo "${GREEN}" "doctor${NORMAL}           Check your system for potential problems. Will exit with a non-zero status if any potential problems are found."
       echo "${GREEN}" "reset${NORMAL}            Shutdown and reset everyhing (USE with CAUTION)."
       echo "${GREEN}" "init${NORMAL}             Initialize a new project using DevilBox."
       echo "${GREEN}" "shell${NORMAL}            Open shell (php version as args)"
@@ -766,6 +774,7 @@ function Usage {
       echo " up${NORMAL}(start)        Start designated devilbox services."
       echo " down${NORMAL}(stop)       Stop all Devilbox services."
       echo " restart${NORMAL}          Restart Devilbox service(s). Leave empty to restart all."
+      echo " doctor${NORMAL}           Check your system for potential problems. Will exit with a non-zero status if any potential problems are found."
       echo " reset${NORMAL}            Shutdown and reset everyhing (USE with CAUTION)."
       echo " init${NORMAL}             Initialize a new project using DevilBox."
       echo " shell${NORMAL}            Open shell (php version as args)"

@@ -268,11 +268,6 @@ DEVILBOX_HTTPD_MGMT_PASS=mypassword
 ###
 ### Note: PHP 5.6 has no arm64 support. Use at your own risk.
 ###
-#PHP_SERVER=5.6
-#PHP_SERVER=7.0
-#PHP_SERVER=7.1
-#PHP_SERVER=7.2
-#PHP_SERVER=7.3
 #PHP_SERVER=7.4
 #PHP_SERVER=8.0
 PHP_SERVER=8.1
