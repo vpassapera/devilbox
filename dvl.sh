@@ -188,7 +188,7 @@ TEMPLATE_CONFIG="$DEVILBOX_PATH/.tests/devilbox-template-config.yaml"
 YQ_BINARY="$DEVILBOX_PATH/.tests/binaries/yq"
 
 # Read-only variables
-readonly VERSION="1.1.0"
+readonly VERSION="1.2.0"
 
 function main {
   if [[ $# -eq 0 ]] ; then
@@ -241,9 +241,17 @@ function main {
         shift;
         OpenShell "$@"
       ;;
+      generate-yaml)
+        shift;
+        CreateYamlConf "$@"
+      ;;
       sync-httpd)
         shift;
         SyncHttpdConf "$@"
+      ;;
+      update:docroot|update-docroot)
+        shift;
+        UpdateDocRoots "$@"
       ;;
       --no-ansi)
         Usage --no-ansi
@@ -325,7 +333,7 @@ function ComposerCommand {
 function DatabaseImport {
   if [[ "$#" -lt 2 ]]; then
     info "Ensure your backup file exists in ./backups directory on host machine."
-    error "Missing required argumenst filename /or database name. E.g dvl db:import <filename> <database_name>"
+    error "Missing required arguments filename /or database name. E.g dvl db:import <filename> <database_name>"
   fi
 
   local filename="$1"
@@ -335,18 +343,20 @@ function DatabaseImport {
     echo -ne "${YELLOW}${BOLD}[!] Importing $filename into $dbname..."
     (ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' $dbname < $BACKUP_WORKDIR/$filename") &
     spinner
-    echo -ne "${NORMAL}"
+    echo -ne "...${NORMAL} ${GREEN}DONE ✔${NORMAL}"
+    echo ""
   elif [[ "$filename" == *.sql.gz ]]; then
     echo -ne "${YELLOW}${BOLD}[!] Extracting $filename and importing it into $dbname..."
     (ExecShellTTY "zcat $BACKUP_WORKDIR/$filename | mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' $dbname") &
     spinner
-    echo -ne "${NORMAL}"
+    echo -ne "...${NORMAL} ${GREEN}DONE ✔${NORMAL}"
+    echo ""
   else
     error "File type (name: ${filename}) does not supported yet."
   fi
 }
 
-function InitializeProject {
+function InteractiveQuestions {
   # Define the app name
   while [[ $APPNAME =~ [^-.a-z0-9] ]] || [[ $APPNAME == '' ]]
   do
@@ -470,6 +480,7 @@ function InitializeProject {
     do
       read -r -p "${CYAN}Please enter your webapp repository (git@github.com:org/repo.git):${NORMAL} " APPREPOSITORY
     done
+    APPREPOSITORY=${APPREPOSITORY//"git clone "}
     echo -ne "${YELLOW}Your webapp repository set to: $APPREPOSITORY"
     echo -ne "...${NORMAL} ${GREEN}DONE${NORMAL}"
     echo ""
@@ -505,43 +516,46 @@ function InitializeProject {
     echo -ne "...${NORMAL} ${GREEN}DONE${NORMAL}"
     echo ""
   fi
+}
 
+function InitializeProject {
+  if [[ ! -f "$CURRENT_DIR/$CONFIG_FILE" ]]; then
+    InteractiveQuestions
+  fi
   BootstrapWebApplication "$WEBAPP_STACK"
+  GenerateYamlConf "$WEBAPP_STACK" "$APPNAME" "$APPDOMAINS" "$WEB_MULTI" "$MAGE_INFRA" "$APPREPOSITORY" "$PHP_VERSION" "$PROXY_PORT"
 }
 
 function UpdateConfig {
-  local filePath="$WEBAPP_DIR/$APPNAME/$CONFIG_FILE"
+  local filePath="${@: -1}"
   local nullInput=""
 
   if [[ ! -f "$filePath" ]]; then
     nullInput=" --null-input"
   fi
 
-  $YQ_BINARY"$nullInput" "$@"
+  "$YQ_BINARY$nullInput" "$@"
 }
 
 function GenerateYamlConf {
-  current_stack="$1"
-  app_name="$2"
-  is_subdomain="$3"
-  infra_type="$4"
-  repo_url="$5"
-  php_version="$6"
-  proxy_port="$7"
+  local baseAppDir="$WEBAPP_DIR/$2"
+  local filePath="$baseAppDir/$HTTPD_DOCROOT_DIR/$CONFIG_FILE"
 
-  local filePath="$WEBAPP_DIR/$APPNAME/$CONFIG_FILE"
+  if [[ "$1" == "magento" ]] && [[ "$5" == "aws" ]]; then
+    filePath="$baseAppDir/$CONFIG_FILE"
+  fi
 
   if [[ ! -f "$filePath" ]]; then
     \cp "$TEMPLATE_CONFIG" "$filePath"
     current_stack="$1" \
     app_name="$2" \
-    domain="$3"
+    domain="$3" \
     is_subdomain="$4" \
     infra_type="$5" \
     repo_url="$6" \
     php_version="$7" \
     proxy_port="$8" \
-    UpdateConfig '.[] |= envsubst' "$filePath"
+    UpdateConfig '(.. | select(tag == "!!str")) |= envsubst(ne, ff)' "$TEMPLATE_CONFIG" > "$filePath"
   fi
 }
 
@@ -550,6 +564,7 @@ function BootstrapWebApplication {
   echo -ne "${YELLOW}Please wait, we are configuring your web application"
   local devilboxConfDir="$WEBAPP_DIR/$APPNAME/$HTTPD_TEMPLATE_DIR"
   local currentStack="$1"
+  local templateType
 
   # Creating dirs
   if [[ ! -d "$WEBAPP_DIR" ]]; then
@@ -564,7 +579,9 @@ function BootstrapWebApplication {
 
   if [[ "$WEB_MULTI" == "N" ]] && [[ "$MAGE_INFRA" == "aws" ]]; then
     git clone --quiet "$APPREPOSITORY" "$WEBAPP_DIR/$APPNAME" > /dev/null
-    (cd "$WEBAPP_DIR/$APPNAME" || exit; ln -snf "$AWS_BASEDIR" "$HTTPD_DOCROOT_DIR" > /dev/null)
+    if [[ "$AWS_BASEDIR" != "$HTTPD_DOCROOT_DIR" ]]; then
+      (cd "$WEBAPP_DIR/$APPNAME" || exit; ln -snf "$AWS_BASEDIR" "$HTTPD_DOCROOT_DIR" > /dev/null)
+    fi
   fi
 
   mkdir -p "$WEBAPP_DIR/$APPNAME"
@@ -589,63 +606,76 @@ function BootstrapWebApplication {
 
   case "$currentStack" in
     magento)
-      if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-magento2" "$devilboxConfDir/nginx.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-magento2" "$devilboxConfDir/apache22.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-magento2" "$devilboxConfDir/apache24.yml"
-      fi
+      templateType="magento2"
       ;;
     nodejs)
-      if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-rproxy" "$devilboxConfDir/nginx.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-rproxy" "$devilboxConfDir/apache22.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-rproxy" "$devilboxConfDir/apache24.yml"
-      fi
+      templateType="rproxy"
       ;;
     shopify)
-      if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-rproxy" "$devilboxConfDir/nginx.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-rproxy" "$devilboxConfDir/apache22.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-rproxy" "$devilboxConfDir/apache24.yml"
-      fi
+      templateType="rproxy"
       ;;
     bigcommerce)
-      if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-rproxy" "$devilboxConfDir/nginx.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-rproxy" "$devilboxConfDir/apache22.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-rproxy" "$devilboxConfDir/apache24.yml"
-      fi
+      templateType="rproxy"
       ;;
     laravel)
-      if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-laravel" "$devilboxConfDir/nginx.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-laravel" "$devilboxConfDir/apache22.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-laravel" "$devilboxConfDir/apache24.yml"
-      fi
+      templateType="vhost"
       ;;
     phpweb|*)
-      if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-vhost" "$devilboxConfDir/nginx.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-vhost" "$devilboxConfDir/apache22.yml"
-      elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
-        cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-vhost" "$devilboxConfDir/apache24.yml"
-      fi
+      templateType="vhost"
       ;;
   esac
 
+  if [[ "$HTTPD_SERVER" =~ "nginx" ]]; then
+    cp "$DEVILBOX_PATH/cfg/vhost-gen/nginx.yml-example-$templateType" "$devilboxConfDir/nginx.yml"
+  elif [[ "$HTTPD_SERVER" = "apache-2.2" ]]; then
+    cp "$DEVILBOX_PATH/cfg/vhost-gen/apache22.yml-example-$templateType" "$devilboxConfDir/apache22.yml"
+  elif [[ "$HTTPD_SERVER" = "apache-2.4" ]]; then
+    cp "$DEVILBOX_PATH/cfg/vhost-gen/apache24.yml-example-$templateType" "$devilboxConfDir/apache24.yml"
+  fi
+
   echo -ne "...${NORMAL} ${GREEN}DONE ✔${NORMAL}"
   echo ""
+}
+
+function CreateYamlConf {
+  if [[ ! -f "$CURRENT_DIR/$CONFIG_FILE" ]]; then
+    error "Missing file $CONFIG_FILE in current directory!"
+  fi
+
+  InteractiveQuestions
+  GenerateYamlConf "$WEBAPP_STACK" "$APPNAME" "$APPDOMAINS" "$WEB_MULTI" "$MAGE_INFRA" "$APPREPOSITORY" "$PHP_VERSION" "$PROXY_PORT"
+}
+
+function UpdateDocRoots {
+  if [[ "$#" -lt 1 ]]; then
+    error "Missing required argument: old document root dir. E.g dvl update:docroot <old_htdoc_root_dir>"
+  fi
+
+  local oldHttpdDocRoot="$1"
+  local hasEnvDir
+
+  echo "${YELLOW}${BOLD}Please wait, we are update your document roots..."
+  echo ""
+
+  for appName in "$WEBAPP_DIR"/*; do
+    hasEnvDir=$(find "$appName" -maxdepth 1 -type d -name '*env*' -print -quit)
+    for fileOrDir in "$appName"/*; do
+      if [[ -L "$fileOrDir" ]] || [[ -d "$fileOrDir" ]]; then
+        if [[ $(basename "$fileOrDir") == "$oldHttpdDocRoot" ]] && [[ $(basename "$fileOrDir") != "$HTTPD_DOCROOT_DIR" ]]; then
+          echo -ne "${YELLOW}${BOLD}[!] Update symbolic links for $appName..."
+          if [[ "$hasEnvDir" =~ "env" ]]; then
+            (cd "$appName" || exit; ln -snf "$AWS_BASEDIR" "$HTTPD_DOCROOT_DIR" > /dev/null) &
+            spinner
+          else
+            (cd "$appName" || exit; mv "$(basename "$fileOrDir")" "$HTTPD_DOCROOT_DIR" > /dev/null) &
+            spinner
+          fi
+          echo -ne "...${NORMAL} ${GREEN}DONE ✔${NORMAL}"
+          echo ""
+        fi
+      fi
+    done
+  done
 }
 
 function SyncHttpdConf {
@@ -694,9 +724,11 @@ function Usage {
       echo "${GREEN}" "init${NORMAL}             Initialize a new project using DevilBox."
       echo "${GREEN}" "shell${NORMAL}            Open shell (php version as args)"
       echo "${GREEN}" "exec${NORMAL}             Exec a command directly from shell (command executed on main PHP container)"
+      echo "${GREEN}" "db-import${NORMAL}        Restore a backup to database from ./backups directory"
       echo "${GREEN}" "magento${NORMAL}          Run Magento command from the current project directory"
       echo "${GREEN}" "magerun${NORMAL}          Run Magerun2 command from the current project directory"
       echo "${GREEN}" "composer${NORMAL}         Run Composer command from the current project directory"
+      echo "${GREEN}" "update-docroot${NORMAL}   Update new document root for all current webapps"
       echo "${GREEN}" "sync-httpd${NORMAL}       Sync Httpd configuration to all current webapps"
     ;;
     --no-ansi)
@@ -726,9 +758,11 @@ function Usage {
       echo " init${NORMAL}             Initialize a new project using DevilBox."
       echo " shell${NORMAL}            Open shell (php version as args)"
       echo " exec${NORMAL}             Exec a command directly from shell (command executed on main PHP container)"
+      echo " db-import${NORMAL}        Restore a backup to database from ./backups directory"
       echo " magento${NORMAL}          Run Magento command from the current project directory"
       echo " magerun${NORMAL}          Run Magerun2 command from the current project directory"
       echo " composer${NORMAL}         Run Composer command from the current project directory"
+      echo " update-docroot${NORMAL}   Update new document root for all current webapps"
       echo " sync-httpd${NORMAL}       Sync Httpd configuration to all current webapps"
     ;;
   esac
