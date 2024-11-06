@@ -314,7 +314,8 @@ function OpenShell {
 }
 
 function ExecShell {
-  BaseComposeCommand exec --user devilbox php bash -c "$@"
+  info "Workdir: $TARGET_WORKDIR"
+  BaseComposeCommand exec --user devilbox php bash -c "cd $TARGET_WORKDIR; $*"
 }
 
 function ExecShellTTY {
@@ -554,7 +555,7 @@ function GenerateYamlConf {
     app_name="$2" \
     domain="$3" \
     is_subdomain="$4" \
-    infra_type="$5" \
+    infra_type="${5:-generic}" \
     repo_url="$6" \
     php_version="$7" \
     proxy_port="$8" \
