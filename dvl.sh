@@ -345,13 +345,13 @@ function DatabaseImport {
 
   if [[ "$filename" == *.sql ]]; then
     echo -ne "${YELLOW}${BOLD}[!] Importing $filename into $dbname..."
-    (ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' $dbname < $BACKUP_WORKDIR/$filename") &
+    (ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' -e 'CREATE DATABASE IF NOT EXISTS ${dbname}'" && ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' $dbname < $BACKUP_WORKDIR/$filename") &
     spinner
     echo -ne "...${NORMAL} ${GREEN}DONE ✔${NORMAL}"
     echo ""
   elif [[ "$filename" == *.sql.gz ]]; then
     echo -ne "${YELLOW}${BOLD}[!] Extracting $filename and importing it into $dbname..."
-    (ExecShellTTY "zcat $BACKUP_WORKDIR/$filename | mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' $dbname") &
+    (ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' -e 'CREATE DATABASE IF NOT EXISTS ${dbname}'" && ExecShellTTY "zcat $BACKUP_WORKDIR/$filename | mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' $dbname") &
     spinner
     echo -ne "...${NORMAL} ${GREEN}DONE ✔${NORMAL}"
     echo ""
@@ -556,7 +556,7 @@ function GenerateYamlConf {
     domain="$3" \
     is_subdomain="$4" \
     infra_type="${5:-generic}" \
-    repo_url="$6" \
+    repo_url="${6:-N/A}" \
     php_version="$7" \
     proxy_port="$8" \
     UpdateConfig '(.. | select(tag == "!!str")) |= envsubst(ne, ff)' "$TEMPLATE_CONFIG" > "$filePath"
