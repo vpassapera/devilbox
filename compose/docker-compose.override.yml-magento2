@@ -441,7 +441,7 @@ services:
   # OpenSearch
   # -----------------------------------------------------------------------------------------------
   opensearch:
-    image: magento/magento-cloud-docker-opensearch:${OPENSEARCH_SERVER:-1.2-1.3.7}
+    image: markoshust/magento-opensearch:${OPENSEARCH_SERVER:-1.2-0}
     hostname: opensearch
     ports:
       - "${LOCAL_LISTEN_ADDR}${HOST_PORT_ELK_ELASTIC:-9200}:9200"
