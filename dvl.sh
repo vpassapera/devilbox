@@ -188,7 +188,7 @@ TEMPLATE_CONFIG="$DEVILBOX_PATH/.tests/devilbox-template-config.yaml"
 YQ_BINARY="$DEVILBOX_PATH/.tests/binaries/yq"
 
 # Read-only variables
-readonly VERSION="1.2.0"
+readonly VERSION="1.2.1"
 
 function main {
   if [[ $# -eq 0 ]] ; then
@@ -239,6 +239,14 @@ function main {
       composer)
         shift;
         ComposerCommand "$@"
+      ;;
+      ece-tools|ecetools)
+        shift;
+        EceToolsCommand "$@"
+      ;;
+      cloud-patches|ece-patches|ecepatches)
+        shift;
+        EcePatchesCommand "$@"
       ;;
       shell)
         shift;
@@ -327,11 +335,19 @@ function MagentoCommand {
 }
 
 function MagerunCommand {
-  BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "php -dmemory_limit=-1 magerun $*"
+  BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "php -dmemory_limit=-1 /usr/local/bin/magerun $*"
 }
 
 function ComposerCommand {
   BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "composer $*"
+}
+
+function EceToolsCommand {
+  BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "php -dmemory_limit=-1 ./vendor/bin/ece-tools $*"
+}
+
+function EcePatchesCommand {
+  BaseComposeCommand exec --workdir "$TARGET_WORKDIR" --user devilbox php bash -c "php -dmemory_limit=-1 ./vendor/bin/ece-patches $*"
 }
 
 function DatabaseImport {
@@ -345,13 +361,13 @@ function DatabaseImport {
 
   if [[ "$filename" == *.sql ]]; then
     echo -ne "${YELLOW}${BOLD}[!] Importing $filename into $dbname..."
-    (ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' -e 'CREATE DATABASE IF NOT EXISTS ${dbname}'" && ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' $dbname < $BACKUP_WORKDIR/$filename") &
+    (ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' -e 'CREATE DATABASE IF NOT EXISTS ${dbname}'" && ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' --default-character-set=utf8 $dbname < $BACKUP_WORKDIR/$filename") &
     spinner
     echo -ne "...${NORMAL} ${GREEN}DONE ✔${NORMAL}"
     echo ""
   elif [[ "$filename" == *.sql.gz ]]; then
     echo -ne "${YELLOW}${BOLD}[!] Extracting $filename and importing it into $dbname..."
-    (ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' -e 'CREATE DATABASE IF NOT EXISTS ${dbname}'" && ExecShellTTY "zcat $BACKUP_WORKDIR/$filename | mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' $dbname") &
+    (ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' -e 'CREATE DATABASE IF NOT EXISTS ${dbname}'" && ExecShellTTY "zcat $BACKUP_WORKDIR/$filename | mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' --default-character-set=utf8 $dbname") &
     spinner
     echo -ne "...${NORMAL} ${GREEN}DONE ✔${NORMAL}"
     echo ""
@@ -459,7 +475,9 @@ function InteractiveQuestions {
         echo ""
         ;;
     esac
+  fi
 
+  if [[ "$WEBAPP_STACK" != "bigcommerce" ]] && [[ "$WEBAPP_STACK" != "nodejs" ]] && [[ "$WEBAPP_STACK" != "shopify" ]] && [[ "$WEBAPP_STACK" != "laravel" ]]; then
     # Set Infra Mode
     read -r -p "${CYAN}What is the infrastructure of your Magento project (aws, cloud)? [cloud]${NORMAL} " response
     case "$response" in
@@ -749,6 +767,8 @@ function Usage {
       echo "${GREEN}" "magento${NORMAL}          Run Magento command from the current project directory"
       echo "${GREEN}" "magerun${NORMAL}          Run Magerun2 command from the current project directory"
       echo "${GREEN}" "composer${NORMAL}         Run Composer command from the current project directory"
+      echo "${GREEN}" "ece-tools${NORMAL}        Run EceTools command from the current project directory"
+      echo "${GREEN}" "cloud-patches${NORMAL}    Run EcePatches command from the current project directory"
       echo "${GREEN}" "update-docroot${NORMAL}   Update new document root for all current webapps"
       echo "${GREEN}" "sync-httpd${NORMAL}       Sync Httpd configuration to all current webapps"
     ;;
@@ -784,6 +804,8 @@ function Usage {
       echo " magento${NORMAL}          Run Magento command from the current project directory"
       echo " magerun${NORMAL}          Run Magerun2 command from the current project directory"
       echo " composer${NORMAL}         Run Composer command from the current project directory"
+      echo " ece-tools${NORMAL}        Run EceTools command from the current project directory"
+      echo " cloud-patches${NORMAL}    Run EcePatches command from the current project directory"
       echo " update-docroot${NORMAL}   Update new document root for all current webapps"
       echo " sync-httpd${NORMAL}       Sync Httpd configuration to all current webapps"
     ;;
