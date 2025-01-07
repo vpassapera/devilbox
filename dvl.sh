@@ -361,13 +361,13 @@ function DatabaseImport {
 
   if [[ "$filename" == *.sql ]]; then
     echo -ne "${YELLOW}${BOLD}[!] Importing $filename into $dbname..."
-    (ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' -e 'CREATE DATABASE IF NOT EXISTS ${dbname}'" && ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' --default-character-set=utf8 $dbname < $BACKUP_WORKDIR/$filename") &
+    (ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' -e 'CREATE DATABASE IF NOT EXISTS ${dbname}'" && ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' --default-character-set=utf8 --force $dbname < $BACKUP_WORKDIR/$filename") &
     spinner
     echo -ne "...${NORMAL} ${GREEN}DONE ✔${NORMAL}"
     echo ""
   elif [[ "$filename" == *.sql.gz ]]; then
     echo -ne "${YELLOW}${BOLD}[!] Extracting $filename and importing it into $dbname..."
-    (ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' -e 'CREATE DATABASE IF NOT EXISTS ${dbname}'" && ExecShellTTY "zcat $BACKUP_WORKDIR/$filename | mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' --default-character-set=utf8 $dbname") &
+    (ExecShellTTY "mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' -e 'CREATE DATABASE IF NOT EXISTS ${dbname}'" && ExecShellTTY "zcat $BACKUP_WORKDIR/$filename | mysql --host=mysql --user=root --password='$MYSQL_ROOT_PASSWORD' --default-character-set=utf8 --force $dbname") &
     spinner
     echo -ne "...${NORMAL} ${GREEN}DONE ✔${NORMAL}"
     echo ""

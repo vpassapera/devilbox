@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+set -u
+set -o pipefail
+
+
+###
+### Pre-flight check
+###
+if ! command -v nvm >/dev/null 2>&1; then
+	echo "No NVM found, skipping configuration."
+	exit 0
+fi
+
+# Node.js Version Manager home directory
+NVM_DIR="/opt/nvm"
+
+chown -Rf devilbox:devilbox "${NVM_DIR}"
